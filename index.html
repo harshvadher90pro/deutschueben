@@ -393,20 +393,23 @@ svg.ring{transform:rotate(-90deg)}
     </button>
   </div>
   <!-- PLACEMENT TEST BANNER — TOP -->
-  
-
-  
-
-  <div id="h-diag-banner" style="background:linear-gradient(135deg,rgba(244,196,48,.1),rgba(244,196,48,.04));border:1px solid rgba(244,196,48,.35);border-radius:14px;padding:16px 18px;margin-bottom:14px">
+  <div id="h-diag-banner" style="display:none;background:linear-gradient(135deg,rgba(244,196,48,.1),rgba(244,196,48,.04));
+    border:1px solid rgba(244,196,48,.35);border-radius:var(--r);
+    padding:16px 18px;margin-bottom:14px">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
       <span style="font-size:2rem">🎯</span>
       <div>
-        <div style="font-size:1rem;font-weight:700;color:#f4c430">Take Your Placement Test</div>
-        <div style="font-size:.78rem;color:#8888a0;margin-top:2px">~10 min · 15 questions · Finds weak areas · Personalises everything</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--gold)">Take Your Placement Test</div>
+        <div style="font-size:.78rem;color:var(--dim);margin-top:2px">
+          ~10 min · 15 questions · Finds your weak areas · Personalises everything
+        </div>
       </div>
     </div>
-    <button onclick="App.startDiag()" style="width:100%;padding:14px;background:#f4c430;color:#0c0c10;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:.97rem;font-weight:600;cursor:pointer">Start Placement Test →</button>
+    <button class="btn btn-gold" style="padding:14px" onclick="App.startDiag()">
+      Start Placement Test →
+    </button>
   </div>
+
   <div style="text-align:center;padding:18px 0 22px">
     <div class="logo">Deutsch<em>Üben</em></div>
     <div class="sub">A2 &rarr; B1 Daily Practice</div>
@@ -482,9 +485,7 @@ svg.ring{transform:rotate(-90deg)}
 <!-- PLACEMENT TEST ACTIVITY -->
 <div id="s-diag" class="screen">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-    <button onclick="skipDiag()" style="background:none;border:1px solid var(--bd);
-      color:var(--dim);border-radius:var(--rs);padding:7px 12px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.78rem">Skip</button>
+    <button style="font-size:.78rem;color:var(--dim);padding:4px 0">Week test — complete to personalise your practice</div><div
     <div style="flex:1">
       <div class="pbar-track"><div class="pbar-fill" id="d-pbar" style="width:0%"></div></div>
     </div>
@@ -975,8 +976,12 @@ function renderHome(){
   if(tel)tel.textContent=`Today: ~${parseInt(tk).toLocaleString()} tokens used`;
 
   // Show placement test banner if never taken
-  const diagBanner = document.getElementById("h-diag-banner");
-  if (diagBanner) diagBanner.style.display = shouldShowDiag() ? "" : "none";
+  const diagBanner=document.getElementById("h-diag-banner");
+  if(diagBanner){
+    diagBanner.style.display=shouldShowDiag()?"":"none";
+    const bt=document.getElementById("diag-banner-title");
+    if(bt)bt.textContent="Week "+currentWeek()+" Placement Test";
+  }
 
   // Writing card
   const p=getTodayPrompt();
@@ -1612,15 +1617,24 @@ ${S.history.slice(0,6).map(h=>`
 </div>`).join("")}`;
     el.style.display="";
     // Add retake option
-    const retakeDiv=document.createElement("div");
-    retakeDiv.style.cssText="grid-column:1/-1;text-align:center;margin-top:8px";
-    retakeDiv.innerHTML=`<button onclick="lsd('diag_done');renderHome();SS('s-home');"
-      style="background:none;border:1px solid var(--bd);color:var(--dim);
-      border-radius:var(--rs);padding:8px 18px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.78rem">
-      🔄 Retake Placement Test
-    </button>`;
-    document.getElementById("h-hist-grid").appendChild(retakeDiv);
+    // Weekly placement history
+    const whDiv=document.createElement("div");
+    whDiv.style.cssText="grid-column:1/-1;margin-top:4px";
+    let wHtml='<div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">📅 Weekly Placement History</div>';
+    for(let w=1;w<=currentWeek();w++){
+      const wr=ls("diag_results_w"+w);
+      if(wr){const d=JSON.parse(wr);
+        wHtml+=`<div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:5px;font-size:.78rem">
+          <strong style="color:var(--gold)">Week ${w}</strong> · ${d.date||""}<br>
+          <span style="color:var(--err)">⚠️ ${(d.weak||[]).map(k=>DIAG_CATEGORIES[k]||k).join(", ")||"none"}</span><br>
+          <span style="color:var(--ok)">✅ ${(d.strong||[]).map(k=>DIAG_CATEGORIES[k]||k).join(", ")||"none"}</span></div>`;
+      }
+    }
+    wHtml+=shouldShowDiag()
+      ?`<div style="color:var(--gold);font-size:.78rem;margin-top:4px">⏰ Week ${currentWeek()} test pending!</div>`
+      :`<div style="color:var(--ok);font-size:.78rem;margin-top:4px">✅ Week ${currentWeek()} complete</div>`;
+    whDiv.innerHTML=wHtml;
+    document.getElementById("h-hist-grid").appendChild(whDiv);
   }else{el.style.display="none";}
 }
 
@@ -1841,11 +1855,8 @@ const DIAG_TO_WEAK = {
 
 let D = {}; // diagnostic session
 
-function shouldShowDiag() {
-  const w = getWeaknesses();
-  const done = ls("diag_done");
-  return !done && Object.keys(w).length === 0;
-}
+function currentWeek(){ return Math.ceil((S.dayCount||1)/7)||1; }
+function shouldShowDiag(){ return !ls("diag_week_"+currentWeek()); }
 
 async function startDiag() {
   document.getElementById("h-diag-banner").style.display = "none";
@@ -1962,8 +1973,10 @@ function showDiagResults() {
     const pct = D.scores[cat] ? Math.round((D.scores[cat].correct/D.scores[cat].total)*100) : 0;
     initWeak[weakKey] = (initWeak[weakKey]||0) + Math.ceil((100 - pct) / 20);
   });
-  lss("weaknesses", JSON.stringify(initWeak));
-  lss("diag_done", "1");
+  const existW=getWeaknesses();
+  Object.entries(initWeak).forEach(([k,v])=>{existW[k]=(existW[k]||0)+v;});
+  lss("weaknesses",JSON.stringify(existW));
+  lss("diag_results_w"+currentWeek(),JSON.stringify({week:currentWeek(),scores:D.scores,weak,strong,date:new Date().toLocaleDateString()}));
 
   // Sort bars: weakest first
   barData.sort((a, b) => a.pct - b.pct);
@@ -2006,9 +2019,11 @@ function showDiagResults() {
   }, 100);
 }
 
-function finishDiag() {
-  renderHome();
-  SS("s-home");
+function finishDiag(){
+  lss("diag_week_"+currentWeek(),"1");
+  lss("diag_done","1");
+  renderHome(); SS("s-home");
+  toast("Week "+currentWeek()+" done! Practice adapted 🎯");
 }
 
 const App={startGrammar,startVocab,startWriting,submitWriting,startDailyWriting,submitDailyWriting,startDiag,goHome:()=>SS("s-home"),toggleHistory};
