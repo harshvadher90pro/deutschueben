@@ -301,6 +301,44 @@ svg.ring{transform:rotate(-90deg)}
 .match-item.wrong-match{border-color:var(--err);color:var(--err);background:rgba(248,113,113,.08)}
 .match-item.disabled{opacity:.5;cursor:default}
 .match-progress{font-size:.8rem;color:var(--dim);text-align:center;margin-bottom:8px}
+
+/* ── VOCAB SENTENCE CARD ── */
+.vocab-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:28px 22px;margin-bottom:14px;transition:border-color .3s;position:relative}
+.vc-meta{display:flex;align-items:center;justify-content:space-between;
+  font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:14px}
+.vc-diff{padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:600}
+.diff-1{background:rgba(74,222,128,.1);color:var(--ok)}
+.diff-2{background:rgba(251,191,36,.1);color:#fbbf24}
+.diff-3{background:rgba(248,113,113,.1);color:var(--err)}
+.vc-word{font-family:"Playfair Display",serif;font-size:2.4rem;font-weight:900;
+  color:var(--txt);line-height:1;margin-bottom:4px}
+.vc-article{color:var(--gold)}
+.vc-meta2{font-size:.82rem;color:var(--dim);margin-bottom:18px}
+.vc-sentence{background:var(--sf2);border-left:3px solid var(--gold);border-radius:0 var(--rs) var(--rs) 0;
+  padding:14px 16px;margin-bottom:8px;font-size:1rem;line-height:1.65;color:var(--txt)}
+.vc-highlight{color:var(--gold);font-weight:700;border-bottom:2px solid var(--gold)}
+.vc-translation{font-size:.82rem;color:var(--dim);font-style:italic;padding:0 4px;margin-bottom:14px}
+.vc-speak{font-size:.78rem;color:var(--info);background:rgba(96,165,250,.08);
+  border:1px solid rgba(96,165,250,.2);border-radius:var(--rs);
+  padding:8px 14px;text-align:center;margin-bottom:14px}
+.vc-try{margin-bottom:10px}
+.vc-try-label{font-size:.75rem;color:var(--dim);margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.07em}
+.vc-try-input{width:100%;padding:12px 14px;background:var(--sf);color:var(--txt);
+  border:1px solid var(--bd);border-radius:var(--rs);font-family:"DM Sans",sans-serif;
+  font-size:.93rem;outline:none;transition:border-color .2s}
+.vc-try-input:focus{border-color:var(--gold)}
+.vc-model{font-size:.82rem;color:var(--dim);margin-top:8px;padding:8px 12px;
+  background:var(--sf2);border-radius:var(--rs);display:none}
+.vc-model.show{display:block}
+.vocab-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+.vbtn{padding:14px;border-radius:var(--r);border:none;font-family:"DM Sans",sans-serif;
+  font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s}
+.vbtn-ok{background:rgba(74,222,128,.12);color:var(--ok);border:1px solid rgba(74,222,128,.25)}
+.vbtn-ok:hover{background:rgba(74,222,128,.22);transform:translateY(-1px)}
+.vbtn-no{background:rgba(248,113,113,.1);color:var(--err);border:1px solid rgba(248,113,113,.22)}
+.vbtn-no:hover{background:rgba(248,113,113,.18);transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -359,10 +397,36 @@ svg.ring{transform:rotate(-90deg)}
     <div class="mode-card" onclick="App.startVocab()">
       <div class="mc-icon">🎯</div>
       <div class="mc-title">Wörter des Tages</div>
-      <div class="mc-desc" id="h-vtheme">30 new words · der/die/das game</div>
+      <div class="mc-desc" id="h-vtheme">30 words · real-life sentences</div>
       <span class="mc-badge bg-blue" id="h-vlvl">—</span>
     </div>
   </div>
+  <!-- Daily Writing Card -->
+  <div id="h-write-card" style="background:var(--sf);border:1px solid var(--bd);
+    border-radius:var(--r);padding:18px 18px;margin-bottom:12px;cursor:pointer"
+    onclick="App.startDailyWriting()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.5rem">✍️</span>
+        <div>
+          <div style="font-size:.92rem;font-weight:600">Daily Writing Task</div>
+          <div style="font-size:.75rem;color:var(--dim)" id="h-write-desc">Practice writing German</div>
+        </div>
+      </div>
+      <span style="font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:20px;
+        background:rgba(244,196,48,.08);color:var(--gold)" id="h-write-level">A2</span>
+    </div>
+    <div style="font-size:.82rem;color:var(--txt);font-style:italic;
+      background:var(--sf2);border-radius:var(--rs);padding:10px 12px;
+      border-left:3px solid var(--gold)" id="h-write-prompt">Loading today's prompt…</div>
+    <div id="h-weak-areas" style="display:none;margin-top:10px;padding:8px 12px;
+      background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.18);
+      border-radius:var(--rs);font-size:.78rem">
+      <span style="color:var(--err)">⚠️ Focus areas: </span>
+      <span id="h-weak-list" style="color:var(--txt)"></span>
+    </div>
+  </div>
+
   <button class="btn btn-ghost" style="margin-top:4px" onclick="App.toggleHistory()">📊 Progress History</button>
   <div id="token-info" style="text-align:center;margin-top:10px;font-size:.72rem;color:var(--dim)"></div>
   <div id="h-hist" style="display:none">
@@ -424,7 +488,7 @@ svg.ring{transform:rotate(-90deg)}
 <!-- VOCAB LOADING -->
 <div id="s-vload" class="screen">
   <div class="load-wrap"><div class="loader"></div>
-    <div class="load-msg">Loading 30 new vocabulary words…</div>
+    <div class="load-msg">Generating 30 words with real-life sentences…</div>
     <div class="load-phrase" id="v-phrase">Los geht's! 🚀</div>
   </div>
 </div>
@@ -466,6 +530,108 @@ svg.ring{transform:rotate(-90deg)}
     <button class="btn btn-gold" onclick="App.startWriting()">✍️ Writing Task →</button>
     <button class="btn btn-ghost" onclick="App.goHome()">Back to Home</button>
   </div>
+</div>
+
+<!-- DAILY WRITING TASK (standalone) -->
+<div id="s-dwrite" class="screen">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <button onclick="App.goHome()" style="background:none;border:1px solid var(--bd);
+      color:var(--dim);border-radius:var(--rs);padding:8px 14px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.82rem">← Home</button>
+    <div class="sec-title" style="margin:0">✍️ Daily Writing</div>
+  </div>
+  <div class="task-card" id="dw-task-card">
+    <div class="task-lbl">Today's Writing Task</div>
+    <div class="task-txt" id="dw-prompt"></div>
+    <div style="margin-top:8px;font-size:.75rem;color:var(--dim)" id="dw-focus-hint"></div>
+  </div>
+
+  <!-- Weak area reminder -->
+  <div id="dw-weak-remind" style="display:none;margin-bottom:14px;padding:10px 14px;
+    background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.18);
+    border-radius:var(--rs);font-size:.82rem">
+    <span style="color:var(--err)">💡 Your weak areas to practice: </span>
+    <span id="dw-weak-txt" style="color:var(--txt);font-weight:500"></span>
+  </div>
+
+  <div style="font-size:.8rem;color:var(--dim);margin-bottom:6px">Write in German (aim for 6–10 sentences):</div>
+  <textarea class="write-area" id="dw-area" style="min-height:180px"
+    placeholder="Schreib hier auf Deutsch…"
+    oninput="dwUpdateCount()"></textarea>
+  <div class="write-meta">
+    <span id="dw-tips" style="color:var(--dim);font-size:.75rem">Use full sentences. Try different tenses!</span>
+    <span><span class="wc-n" id="dw-cnt">0</span> words</span>
+  </div>
+  <button class="btn btn-gold" onclick="App.submitDailyWriting()">Submit for AI Feedback →</button>
+  <button class="btn btn-ghost" onclick="App.goHome()">Skip today</button>
+</div>
+
+<!-- DAILY WRITING FEEDBACK LOADING -->
+<div id="s-dwload" class="screen">
+  <div class="load-wrap"><div class="loader"></div>
+    <div class="load-msg">Analysing your German writing…</div>
+    <div class="load-phrase">Einen Moment bitte… 🔍</div>
+  </div>
+</div>
+
+<!-- DAILY WRITING FEEDBACK -->
+<div id="s-dwfeed" class="screen">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <button onclick="App.goHome()" style="background:none;border:1px solid var(--bd);
+      color:var(--dim);border-radius:var(--rs);padding:8px 14px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.82rem">← Home</button>
+    <div class="sec-title" style="margin:0">📝 Writing Feedback</div>
+  </div>
+
+  <!-- Score + level -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+    <div class="fsec" style="text-align:center;margin:0">
+      <div class="score-big" id="dwf-score">—</div>
+      <div style="color:var(--dim);font-size:.78rem">Writing Score</div>
+    </div>
+    <div class="fsec" style="text-align:center;margin:0">
+      <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;
+        color:var(--gold)" id="dwf-level">A2</div>
+      <div style="color:var(--dim);font-size:.78rem">Current Level</div>
+    </div>
+  </div>
+
+  <!-- Overall feedback -->
+  <div class="fsec" style="margin-bottom:10px">
+    <div class="fhd">Overall Feedback</div>
+    <div style="font-size:.93rem;line-height:1.6" id="dwf-overall"></div>
+  </div>
+
+  <!-- Strong points -->
+  <div class="fsec" id="dwf-strong-wrap" style="margin-bottom:10px">
+    <div class="fhd">✅ Strong Points</div>
+    <div id="dwf-strong" style="font-size:.88rem;line-height:1.7;color:var(--ok)"></div>
+  </div>
+
+  <!-- Weak areas — becomes tomorrow's focus -->
+  <div class="fsec" id="dwf-weak-wrap" style="margin-bottom:10px;
+    border:1px solid rgba(248,113,113,.25);background:rgba(248,113,113,.04)">
+    <div class="fhd" style="color:var(--err)">⚠️ Areas to Improve</div>
+    <div id="dwf-weak" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+    <div style="font-size:.78rem;color:var(--dim)" id="dwf-tomorrow">
+      → Tomorrow's grammar practice will focus on these!
+    </div>
+  </div>
+
+  <!-- Grammar corrections -->
+  <div class="fsec" id="dwf-corr-wrap" style="margin-bottom:10px">
+    <div class="fhd">Grammar Corrections</div>
+    <div id="dwf-corrs"></div>
+  </div>
+
+  <!-- Corrected text -->
+  <div class="fsec" style="margin-bottom:14px">
+    <div class="fhd">Corrected Version</div>
+    <div class="corr-txt" id="dwf-ctxt"></div>
+  </div>
+
+  <button class="btn btn-gold" onclick="App.goHome()">Back to Home 🏠</button>
+  <button class="btn btn-ghost" onclick="App.startDailyWriting()">Rewrite ↺</button>
 </div>
 
 <!-- WRITING TASK -->
@@ -675,10 +841,39 @@ function renderHome(){
   document.getElementById("h-gtopic").textContent=gt.name;
   document.getElementById("h-gdiff").textContent=stars(diff())+" Difficulty";
   document.getElementById("h-vtheme").textContent=vt.en+" · "+vt.level;
-  document.getElementById("h-vlvl").textContent="20 Wörter";
+  document.getElementById("h-vlvl").textContent="30 Wörter";
   const tk=localStorage.getItem("tokens_"+new Date().toDateString())||"0";
   const tel=document.getElementById("token-info");
   if(tel)tel.textContent=`Today: ~${parseInt(tk).toLocaleString()} tokens used`;
+
+  // Writing card
+  const p=getTodayPrompt();
+  const prEl=document.getElementById("h-write-prompt");
+  const lvEl=document.getElementById("h-write-level");
+  const dwDesc=document.getElementById("h-write-desc");
+  if(prEl)prEl.textContent=p.de;
+  if(lvEl)lvEl.textContent=p.level;
+  if(dwDesc)dwDesc.textContent=`Day ${S.dayCount} · ${p.en}`;
+
+  // Weak areas on home
+  const tops=getTopWeaknesses(3);
+  const waEl=document.getElementById("h-weak-areas");
+  const wlEl=document.getElementById("h-weak-list");
+  if(waEl&&wlEl){
+    if(tops.length){
+      wlEl.textContent=tops.map(k=>WEAK_LABELS[k]||k).join(" · ");
+      waEl.style.display="block";
+    }else{waEl.style.display="none";}
+  }
+
+  // Writing done today?
+  const wDone=localStorage.getItem("dw_done_"+S.dayCount);
+  const dwCard=document.getElementById("h-write-card");
+  if(dwCard&&wDone){
+    dwCard.style.opacity=".7";
+    const badge=dwCard.querySelector("span[id='h-write-level']");
+    if(badge)badge.textContent="✅ Done";
+  }
 }
 /* ─── GRAMMAR ─── */
 // ── TIMER ──
@@ -699,7 +894,13 @@ function stopGTimer(){clearInterval(gTimer);}
 async function startGrammar(){
   SS("s-gload");
   document.getElementById("g-phrase").textContent=PHRASES[Math.floor(Math.random()*PHRASES.length)];
-  const t=GRAMMAR_TOPICS[gTopicIdx()],d=diff();
+  // Adaptive: prioritise weak areas from writing feedback
+  const adaptiveIdx=getAdaptiveGrammarTopic();
+  const t=GRAMMAR_TOPICS[adaptiveIdx],d=diff();
+  if(adaptiveIdx!==gTopicIdx()){
+    const tops=getTopWeaknesses(1);
+    if(tops.length)decayWeaknesses([tops[0]]); // slight decay when practised
+  }
   const dl=d<=3?"sehr einfach":d<=5?"einfaches A2":d<=7?"solides A2":d<=9?"oberes A2":"A2-B1";
   // ── USE CACHE if same day ──
   const cacheKey=`g_${S.dayCount}_${gTopicIdx()}`;
@@ -1055,71 +1256,102 @@ async function startVocab(){
   if(vCached){
     V={words:vCached.words,theme:vCached.theme,level:vCached.level,task:vCached.task,cur:0,score:0,results:[]};
     document.getElementById("v-theme").textContent=`${V.theme} · ${V.level}`;
-    SS("s-vgame");renderArtQ();return;
+    SS("s-vgame");renderVocabCard();return;
   }
-  const prompt=`German vocab teacher. Exactly 20 ${t.level} nouns. Theme:${t.name}(${t.en}). Nouns only, with der/die/das, plural, short example.
-JSON:{"theme":"${t.en}","level":"${t.level}","writing_task":"Write 6-8 sentences about ${t.en.toLowerCase()} using 5 of today's words.","words":[{"article":"der","word":"Apfel","plural":"Äpfel","english":"apple","example":"Ich kaufe einen Apfel.","example_english":"I buy an apple."},...20]}`;
+  // 30 words, progressive difficulty, real-life sentences for speaking
+  const prompt=`German vocab teacher. 30 nouns for speaking practice. Theme:${t.name}(${t.en}). Level:${t.level}.
+Order by difficulty: words 1-10 easy A2 simple sentences, 11-20 medium A2 sentences, 21-30 harder A2-B1 sentences.
+Each word: ONE real everyday conversational German sentence (not textbook, something a native speaker says).
+The sentence must use the word naturally. Sentences get more complex as index increases.
+JSON:{"theme":"${t.en}","level":"${t.level}","writing_task":"Write a short paragraph (6-8 sentences) about ${t.en.toLowerCase()}. Use at least 6 of today's words in different tenses.","words":[{"article":"der","word":"Apfel","plural":"Äpfel","english":"apple","example":"Hast du noch einen Apfel? Ich habe gerade großen Hunger.","example_english":"Do you still have an apple? I am really hungry right now.","difficulty":1},...30 total]}`;
   try{
-    const raw=await callAPI(prompt,1800);
+    const raw=await callAPI(prompt,2200);
+    trackTokens(2600);;
     trackTokens(2200);
     const p=xJSON(raw);
     if(!p.words?.length)throw new Error("No words returned");
-    const vWords=p.words.slice(0,20);
+    const vWords=p.words.slice(0,30);
     const vData={words:vWords,theme:p.theme||t.en,level:p.level||t.level,
-      task:p.writing_task||`Write 6-8 sentences about ${t.en} using at least 5 of today's words.`};
-    setCache(vCacheKey,vData); // cache for today
+      task:p.writing_task||`Write 6-8 sentences about ${t.en} using at least 6 of today's words in different tenses.`};
+    setCache(vCacheKey,vData);
     V={...vData,cur:0,score:0,results:[]};
     document.getElementById("v-theme").textContent=`${V.theme} · ${V.level}`;
-    SS("s-vgame");renderArtQ();
+    SS("s-vgame");renderVocabCard();
   }catch(e){SS("s-home");showError(e.message);console.error(e);}
 }
-function renderArtQ(){
-  const w=V.words[V.cur],tot=V.words.length;
+function renderVocabCard(){
+  const w=V.words[V.cur], tot=V.words.length;
   document.getElementById("v-pbar").style.width=`${(V.cur/tot)*100}%`;
   document.getElementById("v-plbl").textContent=`${V.cur+1}/${tot}`;
   document.getElementById("v-sc").textContent=V.score;
-  const b=document.getElementById("v-body");
-  b.innerHTML=`
-<div class="art-card" id="acard">
-  <div class="art-cat">${esc(V.theme)} · ${esc(w.english)}</div>
-  <div class="art-word">${esc(w.word)}</div>
-  <div class="art-plural">Plural: ${esc(w.plural||"—")}</div>
-  <div class="art-reveal" id="arev">
-    <div class="art-ex" id="aex"></div>
-    <div class="art-en">${esc(w.example_english||"")}</div>
+  const diff=w.difficulty||1;
+  const diffLabel=diff===1?"⭐ Easy":diff===2?"⭐⭐ Medium":"⭐⭐⭐ Challenge";
+  const diffClass=diff===1?"diff-1":diff===2?"diff-2":"diff-3";
+  const artClass=`c-${w.article}`;
+
+  // Highlight the word in the example sentence
+  const re=new RegExp(`\\b${w.word}(s|n|m|e|en|er|es)?\\b`,"gi");
+  const highlighted=esc(w.example||"").replace(re,m=>`<span class="vc-highlight">${m}</span>`);
+
+  // For harder words (diff 3): show a "try your own sentence" input
+  const tryBlock=diff===3?`
+<div class="vc-try">
+  <div class="vc-try-label">💬 Try making your own sentence:</div>
+  <input class="vc-try-input" id="vc-try" type="text"
+    placeholder="Schreib einen Satz mit '${esc(w.word)}'…"
+    autocomplete="off" autocorrect="off" spellcheck="false">
+  <div class="vc-model" id="vc-model">
+    📝 Model: <em>${highlighted}</em>
   </div>
+  <button onclick="showVCModel()" style="margin-top:8px;background:none;border:1px solid var(--bd);
+    color:var(--dim);border-radius:var(--rs);padding:6px 14px;cursor:pointer;
+    font-family:'DM Sans',sans-serif;font-size:.78rem">Show example →</button>
+</div>`:"";
+
+  const body=document.getElementById("v-body");
+  body.innerHTML=`
+<div class="vocab-card" id="vc-card">
+  <div class="vc-meta">
+    <span>${esc(V.theme)} · ${esc(w.english)}</span>
+    <span class="vc-diff ${diffClass}">${diffLabel}</span>
+  </div>
+  <div class="vc-word"><span class="${artClass}">${esc(w.article)}</span> ${esc(w.word)}</div>
+  <div class="vc-meta2">Plural: ${esc(w.plural||"—")} &nbsp;·&nbsp; <em>${esc(w.english)}</em></div>
+  ${diff<3?`
+  <div class="vc-sentence">${highlighted}</div>
+  <div class="vc-translation">"${esc(w.example_english||"")}"</div>
+  <div class="vc-speak">🔊 Read this sentence aloud — then move on!</div>
+  `:`
+  <div class="vc-sentence">${highlighted}</div>
+  <div class="vc-translation">"${esc(w.example_english||"")}"</div>
+  `}
+  ${tryBlock}
 </div>
-<div class="art-btns">
-  <button class="abtn a-der" id="b-der" onclick="checkArt('der')">DER</button>
-  <button class="abtn a-die" id="b-die" onclick="checkArt('die')">DIE</button>
-  <button class="abtn a-das" id="b-das" onclick="checkArt('das')">DAS</button>
-</div>
-<button class="nxtbtn" id="vnxt" onclick="vNext()">Next →</button>`;
-  b.style.animation="none";void b.offsetHeight;b.style.animation="rise .3s ease";
+<div class="vocab-btns">
+  <button class="vbtn vbtn-ok" onclick="vocabGotIt()">✓ Got it!</button>
+  <button class="vbtn vbtn-no" onclick="vocabPractice()">↩ Need practice</button>
+</div>`;
+  body.style.animation="none";void body.offsetHeight;body.style.animation="rise .3s ease";
 }
-function checkArt(chosen){
-  const bd=document.getElementById("b-der"),bi=document.getElementById("b-die"),bs=document.getElementById("b-das");
-  if(bd.disabled)return;
-  [bd,bi,bs].forEach(b=>b.disabled=true);
-  const w=V.words[V.cur],ok=chosen===w.article;
-  document.getElementById(`b-${w.article}`).classList.add("a-cor");
-  if(!ok)document.getElementById(`b-${chosen}`).classList.add("a-wrg");
-  ["der","die","das"].forEach(a=>{if(a!==w.article&&a!==chosen)document.getElementById(`b-${a}`).classList.add("a-wrg");});
-  if(ok){V.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
-  V.results.push({word:w.word,article:w.article,correct:ok});
-  // Build highlighted example
-  const forms={der:["der","Der","ein","Ein","den","Den"],die:["die","Die","eine","Eine"],das:["das","Das","ein","Ein"]};
-  const cls=`hl-${w.article}`;
-  let ex=esc(w.example||"");
-  (forms[w.article]||[]).forEach(f=>{ex=ex.replace(new RegExp(`\b${f}\b`,"g"),`<span class="${cls}">${f}</span>`);});
-  document.getElementById("aex").innerHTML=ex;
-  document.getElementById("arev").classList.add("show");
-  document.getElementById("vnxt").classList.add("show");
-  const card=document.getElementById("acard");
-  card.style.borderColor=ok?"var(--ok)":"var(--err)";
-  setTimeout(()=>{card.style.borderColor="";},1200);
+
+function showVCModel(){
+  const el=document.getElementById("vc-model");
+  if(el)el.classList.add("show");
 }
-function vNext(){V.cur++;if(V.cur>=V.words.length)showVRes();else renderArtQ();}
+function vocabGotIt(){
+  const w=V.words[V.cur];
+  V.results.push({word:w.word,article:w.article,correct:true,difficulty:w.difficulty||1});
+  V.score++;
+  toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);
+  vNext();
+}
+function vocabPractice(){
+  const w=V.words[V.cur];
+  V.results.push({word:w.word,article:w.article,correct:false,difficulty:w.difficulty||1});
+  vNext();
+}
+
+function vNext(){V.cur++;if(V.cur>=V.words.length)showVRes();else renderVocabCard();}
 function showVRes(){
   const tot=V.results.length,pct=Math.round(V.score/tot*100);
   const [ic,ti]=pct>=80?["🏆","Ausgezeichnet!"]:pct>=60?["⭐","Sehr gut!"]:pct>=40?["👍","Gut gemacht!"]:["📚","Weiter üben!"];
@@ -1133,8 +1365,12 @@ function showVRes(){
   const c=2*Math.PI*46;
   setTimeout(()=>{document.getElementById("vr-ring").style.strokeDashoffset=c-(pct/100)*c;},100);
   document.getElementById("vr-words").innerHTML=V.results.map((r,i)=>{
-    const w=V.words[i];
-    return`<span class="wchip ${r.correct?"wc-ok":"wc-er"}"><span class="c-${w.article}">${esc(w.article)}</span> ${esc(w.word)}</span>`;
+    const w=V.words[i]||{};
+    const diff=r.difficulty||1;
+    const star=diff===1?"⭐":diff===2?"⭐⭐":"⭐⭐⭐";
+    return`<span class="wchip ${r.correct?"wc-ok":"wc-er"}" title="${star} ${esc(w.example||"")}">
+      <span class="c-${w.article||"der"}">${esc(w.article||"")}</span> ${esc(w.word||"")} <small>${star}</small>
+    </span>`;
   }).join("");
   SS("s-vres");
 }
@@ -1207,7 +1443,195 @@ function toggleHistory(){
     el.style.display="";
   }else{el.style.display="none";}
 }
-const App={startGrammar,startVocab,startWriting,submitWriting,goHome:()=>SS("s-home"),toggleHistory};
+
+// ═══════════════════════════════════════════
+// WEAKNESS TRACKING + ADAPTIVE LEARNING
+// ═══════════════════════════════════════════
+const WEAK_LABELS={
+  perfekt:"Perfekt Tense",articles:"Articles (der/die/das)",
+  cases:"Cases (Akkusativ/Dativ)",word_order:"Word Order",
+  modal_verbs:"Modal Verbs",verb_conjugation:"Verb Conjugation",
+  adjective_endings:"Adjective Endings",subordinate_clauses:"Subordinate Clauses",
+  prepositions:"Prepositions",plurals:"Plural Forms",
+  konjunktiv:"Konjunktiv II",passiv:"Passiv"
+};
+const WEAK_TO_TOPIC={
+  perfekt:5, articles:1, cases:3, word_order:0,
+  modal_verbs:6, verb_conjugation:0, adjective_endings:8,
+  subordinate_clauses:7, prepositions:4, plurals:2,
+  konjunktiv:10, passiv:11
+};
+
+function getWeaknesses(){
+  try{return JSON.parse(localStorage.getItem("du_weaknesses")||"{}");}catch(e){return{};}
+}
+function updateWeaknesses(cats){
+  const w=getWeaknesses();
+  (cats||[]).forEach(c=>{if(WEAK_LABELS[c])w[c]=(w[c]||0)+1;});
+  localStorage.setItem("du_weaknesses",JSON.stringify(w));
+}
+function decayWeaknesses(cats){
+  // Reduce score when user practises a topic (shows improvement)
+  const w=getWeaknesses();
+  (cats||[]).forEach(c=>{if(w[c])w[c]=Math.max(0,w[c]-1);});
+  localStorage.setItem("du_weaknesses",JSON.stringify(w));
+}
+function getTopWeaknesses(n){
+  const w=getWeaknesses();
+  return Object.entries(w).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a).slice(0,n).map(([k])=>k);
+}
+function getAdaptiveGrammarTopic(){
+  const top=getTopWeaknesses(1);
+  if(top.length&&WEAK_TO_TOPIC[top[0]]!==undefined){
+    return WEAK_TO_TOPIC[top[0]];
+  }
+  return gTopicIdx();
+}
+
+// ═══════════════════════════════════════════
+// DAILY WRITING PROMPTS (30 diverse prompts)
+// ═══════════════════════════════════════════
+const DW_PROMPTS=[
+  {de:"Beschreibe deinen typischen Tag. Was machst du morgens, mittags und abends?",en:"Your typical day",focus:"present tense, time expressions",level:"A2"},
+  {de:"Schreib über dein letztes Wochenende. Was hast du gemacht?",en:"Last weekend",focus:"Perfekt tense",level:"A2"},
+  {de:"Beschreibe deine Wohnung. Was steht in welchem Zimmer?",en:"Your apartment",focus:"Wechselpräpositionen, Dativ",level:"A2"},
+  {de:"Schreib eine kurze E-Mail an einen Freund. Lade ihn zu einer Party ein.",en:"Invitation email",focus:"modal verbs, formal/informal",level:"A2"},
+  {de:"Was sind deine Hobbys? Warum magst du sie? Seit wann machst du das?",en:"Your hobbies",focus:"weil-clauses, seit + Dativ",level:"A2"},
+  {de:"Beschreibe eine Person aus deiner Familie. Wie sieht sie aus? Was macht sie?",en:"Family member",focus:"adjective endings, present tense",level:"A2"},
+  {de:"Schreib über deine Stadt oder deinen Wohnort. Was gibt es dort?",en:"Your city",focus:"es gibt + Akkusativ, adjectives",level:"A2"},
+  {de:"Was hast du gestern gegessen und getrunken? Beschreibe deine Mahlzeiten.",en:"Yesterday's meals",focus:"Perfekt tense, food vocabulary",level:"A2"},
+  {de:"Vergleiche Sommer und Winter. Was magst du lieber und warum?",en:"Summer vs Winter",focus:"Komparativ, weil-clauses",level:"A2"},
+  {de:"Schreib über deinen letzten Einkauf. Was hast du gekauft und wo?",en:"Shopping trip",focus:"Akkusativ, Perfekt",level:"A2"},
+  {de:"Beschreibe einen typischen Arbeitstag oder Studientag. Was machst du wann?",en:"Work/study day",focus:"temporal expressions, present",level:"A2"},
+  {de:"Was hast du letzten Sommer gemacht? Bist du verreist?",en:"Last summer",focus:"Perfekt with sein/haben, travel",level:"A2"},
+  {de:"Schreib einen Brief an eine Sprachschule. Du möchtest einen Kurs buchen.",en:"Formal letter",focus:"formal language, modal verbs",level:"A2-B1"},
+  {de:"Beschreibe deinen Traumjob. Was würdest du gerne machen?",en:"Dream job",focus:"Konjunktiv II, modal verbs",level:"A2-B1"},
+  {de:"Was haben deine Freunde oder Familie letztes Jahr gemacht?",en:"What others did",focus:"Perfekt, 3rd person conjugation",level:"A2"},
+  {de:"Beschreibe ein Problem, das du kürzlich hattest, und wie du es gelöst hast.",en:"A problem you solved",focus:"Perfekt, Präteritum, subordinate clauses",level:"B1"},
+  {de:"Was würdest du machen, wenn du eine Woche frei hättest?",en:"A free week",focus:"Konjunktiv II, wenn-clauses",level:"B1"},
+  {de:"Schreib über eine Gewohnheit, die du ändern möchtest. Warum?",en:"A habit to change",focus:"modal verbs, dass-clauses",level:"B1"},
+  {de:"Beschreibe ein Buch, einen Film oder eine Serie, die du magst.",en:"A book or film",focus:"Relativsätze, adjective endings",level:"B1"},
+  {de:"Was sind die Vor- und Nachteile vom Leben in einer großen Stadt?",en:"City life pros/cons",focus:"Genitiv, complex sentences",level:"B1"},
+  {de:"Wie hast du Deutsch gelernt? Was war schwierig, was war einfach?",en:"Learning German",focus:"mixed tenses, reflective writing",level:"A2-B1"},
+  {de:"Beschreibe einen unvergesslichen Moment aus deinem Leben.",en:"Memorable moment",focus:"Perfekt, narrative past",level:"B1"},
+  {de:"Schreib einen Kommentar zu einem Thema, das dich interessiert.",en:"Opinion piece",focus:"Ich finde/meine dass, subordinate clauses",level:"B1"},
+  {de:"Was passiert in deinem Land an einem typischen Nationalfeiertag?",en:"National holiday",focus:"Passiv, present tense",level:"B1"},
+  {de:"Beschreibe deine Ernährungsgewohnheiten. Was isst du warum?",en:"Eating habits",focus:"weil, seit, accusative",level:"A2"},
+  {de:"Schreib über eine Reise, die du gerne machen würdest.",en:"Dream trip",focus:"Konjunktiv II, travel vocabulary",level:"B1"},
+  {de:"Was haben Technologie und Internet in deinem Leben verändert?",en:"Technology impact",focus:"Perfekt, complex sentences",level:"B1"},
+  {de:"Beschreibe einen typischen deutschen Brauch oder ein Fest.",en:"German tradition",focus:"Präsens, temporal clauses",level:"A2-B1"},
+  {de:"Schreib über deine Pläne für die nächsten Monate.",en:"Future plans",focus:"future tense, modal verbs",level:"A2"},
+  {de:"Was ist für dich wichtig im Leben? Warum?",en:"What matters to you",focus:"weil, adjective endings, dass-clauses",level:"B1"}
+];
+
+function getTodayPrompt(){
+  return DW_PROMPTS[(S.dayCount-1)%DW_PROMPTS.length];
+}
+
+// ═══════════════════════════════════════════
+// DAILY WRITING FUNCTIONS
+// ═══════════════════════════════════════════
+function startDailyWriting(){
+  const p=getTodayPrompt();
+  document.getElementById("dw-prompt").textContent=p.de;
+  document.getElementById("dw-focus-hint").textContent=`📌 Grammar focus: ${p.focus}`;
+  document.getElementById("dw-area").value="";
+  document.getElementById("dw-cnt").textContent="0";
+
+  // Show weak areas reminder
+  const tops=getTopWeaknesses(3);
+  const wEl=document.getElementById("dw-weak-remind");
+  const wTxt=document.getElementById("dw-weak-txt");
+  if(tops.length&&wEl&&wTxt){
+    wTxt.textContent=tops.map(k=>WEAK_LABELS[k]||k).join(", ");
+    wEl.style.display="block";
+  }else if(wEl){wEl.style.display="none";}
+  SS("s-dwrite");
+  setTimeout(()=>document.getElementById("dw-area")?.focus(),200);
+}
+
+function dwUpdateCount(){
+  const v=document.getElementById("dw-area")?.value||"";
+  const cnt=v.trim().split(/\s+/).filter(x=>x).length;
+  const el=document.getElementById("dw-cnt");
+  if(el)el.textContent=cnt;
+}
+
+async function submitDailyWriting(){
+  const txt=(document.getElementById("dw-area")?.value||"").trim();
+  if(txt.length<20){toast("Please write at least a few sentences first!");return;}
+  SS("s-dwload");
+  const p=getTodayPrompt();
+  const tops=getTopWeaknesses(3).map(k=>WEAK_LABELS[k]||k).join(", ");
+  const weakHint=tops?`Known weak areas: ${tops}.`:"";
+  const prompt=`German A2-B1 teacher. Analyse this student writing carefully.
+Task:"${p.de.slice(0,120)}" Level:${p.level} Grammar focus:${p.focus}
+${weakHint}
+Student:"${txt.slice(0,500)}"
+Return ONLY valid JSON:
+{"score":0-100,"level_assessment":"A2/A2-B1/B1","overall":"2-3 sentences encouraging feedback",
+"strong_points":["point 1","point 2"],
+"weak_areas":["perfekt","cases","word_order","modal_verbs","verb_conjugation","articles","adjective_endings","subordinate_clauses","prepositions","plurals","konjunktiv","passiv"],
+"corrections":[{"wrong":"phrase","correct":"fixed","rule":"brief rule","category":"perfekt|cases|word_order|etc"}],
+"corrected_text":"full corrected German text",
+"next_focus":"One sentence: what to practice tomorrow"}
+weak_areas must be array of category keys only from the list above. Max 5 corrections. Be encouraging.`;
+  try{
+    const raw=await callAPI(prompt,1200);
+    trackTokens(1600);
+    const p2=xJSON(raw);
+    // Save weaknesses
+    if(p2.weak_areas?.length) updateWeaknesses(p2.weak_areas);
+    // Mark writing done today
+    localStorage.setItem("dw_done_"+S.dayCount,"1");
+    renderDailyFeedback(p2);
+  }catch(e){
+    SS("s-dwrite");
+    toast("⚠️ "+e.message.slice(0,50));
+    console.error(e);
+  }
+}
+
+function renderDailyFeedback(f){
+  document.getElementById("dwf-score").textContent=`${f.score||0}/100`;
+  document.getElementById("dwf-level").textContent=f.level_assessment||"A2";
+  document.getElementById("dwf-overall").textContent=f.overall||"Good effort!";
+
+  // Strong points
+  const sp=(f.strong_points||[]);
+  const spEl=document.getElementById("dwf-strong");
+  document.getElementById("dwf-strong-wrap").style.display=sp.length?"":"none";
+  if(spEl)spEl.innerHTML=sp.map(s=>`<div>✅ ${esc(s)}</div>`).join("");
+
+  // Weak areas
+  const wa=(f.weak_areas||[]).filter(k=>WEAK_LABELS[k]);
+  const waEl=document.getElementById("dwf-weak");
+  document.getElementById("dwf-weak-wrap").style.display=wa.length?"":"none";
+  if(waEl)waEl.innerHTML=wa.map(k=>`<span class="wchip" style="background:rgba(248,113,113,.1);
+    color:var(--err);border:1px solid rgba(248,113,113,.2)">${esc(WEAK_LABELS[k])}</span>`).join("");
+  const nextEl=document.getElementById("dwf-tomorrow");
+  if(nextEl&&f.next_focus)nextEl.textContent="→ "+f.next_focus;
+
+  // Corrections
+  const corrs=(f.corrections||[]);
+  const cw=document.getElementById("dwf-corr-wrap");
+  cw.style.display=corrs.length?"":"none";
+  document.getElementById("dwf-corrs").innerHTML=corrs.map(c=>`
+<div class="corr-item">
+  <div class="co">✗ ${esc(c.wrong)}</div>
+  <div class="cf">✓ ${esc(c.correct)}</div>
+  <div class="ce">💡 ${esc(c.rule)} <span style="color:var(--gold);font-size:.75rem">[${esc(c.category||"")}]</span></div>
+</div>`).join("");
+
+  document.getElementById("dwf-ctxt").textContent=f.corrected_text||"";
+  SS("s-dwfeed");
+}
+
+// ═══════════════════════════════════════════
+// UPDATE renderHome TO SHOW WRITING CARD + WEAKNESSES
+// ═══════════════════════════════════════════
+
+const App={startGrammar,startVocab,startWriting,submitWriting,startDailyWriting,submitDailyWriting,goHome:()=>SS("s-home"),toggleHistory};
 init();
 </script>
 </body>
