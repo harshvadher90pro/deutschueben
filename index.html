@@ -392,6 +392,24 @@ svg.ring{transform:rotate(-90deg)}
       Logout
     </button>
   </div>
+  <!-- PLACEMENT TEST BANNER — TOP -->
+  <div id="h-diag-banner" style="display:none;background:linear-gradient(135deg,rgba(244,196,48,.1),rgba(244,196,48,.04));
+    border:1px solid rgba(244,196,48,.35);border-radius:var(--r);
+    padding:16px 18px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <span style="font-size:2rem">🎯</span>
+      <div>
+        <div style="font-size:1rem;font-weight:700;color:var(--gold)">Take Your Placement Test</div>
+        <div style="font-size:.78rem;color:var(--dim);margin-top:2px">
+          ~10 min · 15 questions · Finds your weak areas · Personalises everything
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-gold" style="padding:14px" onclick="App.startDiag()">
+      Start Placement Test →
+    </button>
+  </div>
+
   <div style="text-align:center;padding:18px 0 22px">
     <div class="logo">Deutsch<em>Üben</em></div>
     <div class="sub">A2 &rarr; B1 Daily Practice</div>
@@ -439,25 +457,6 @@ svg.ring{transform:rotate(-90deg)}
       <span style="color:var(--err)">⚠️ Focus areas: </span>
       <span id="h-weak-list" style="color:var(--txt)"></span>
     </div>
-  </div>
-
-  <!-- Placement test banner (shown when no weakness data) -->
-  <div id="h-diag-banner" style="display:none;background:rgba(244,196,48,.07);
-    border:1px solid rgba(244,196,48,.25);border-radius:var(--r);
-    padding:16px 18px;margin-bottom:12px">
-    <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:1.6rem">🎯</span>
-      <div style="flex:1">
-        <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:3px">
-          Take Your Placement Test
-        </div>
-        <div style="font-size:.78rem;color:var(--dim)">
-          ~10 min · Identifies your weak areas · Personalises all practice
-        </div>
-      </div>
-    </div>
-    <button class="btn btn-gold" style="margin-top:12px;padding:13px"
-      onclick="App.startDiag()">Start Placement Test →</button>
   </div>
 
   <button class="btn btn-ghost" style="margin-top:4px" onclick="App.toggleHistory()">📊 Progress History</button>
@@ -549,9 +548,13 @@ svg.ring{transform:rotate(-90deg)}
 <!-- GRAMMAR ACTIVITY -->
 <div id="s-act" class="screen">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-    <button onclick="stopGTimer();App.goHome()" style="background:none;border:1px solid var(--bd);
-      color:var(--dim);border-radius:var(--rs);padding:7px 12px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.78rem;white-space:nowrap;flex-shrink:0">← Home</button>
+    <button onclick="stopGTimer();App.goHome()" style="background:var(--sf);border:1px solid var(--bd2);
+      color:var(--txt);border-radius:var(--rs);padding:9px 14px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;
+      white-space:nowrap;flex-shrink:0;transition:all .2s"
+      onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+      onmouseout="this.style.borderColor='var(--bd2)';this.style.color='var(--txt)'">
+      ← Home</button>
     <div style="flex:1">
       <div class="pbar-track"><div class="pbar-fill" id="g-pbar" style="width:0%"></div></div>
     </div>
@@ -595,9 +598,13 @@ svg.ring{transform:rotate(-90deg)}
 <!-- ARTIKEL GAME -->
 <div id="s-vgame" class="screen">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-    <button onclick="App.goHome()" style="background:none;border:1px solid var(--bd);
-      color:var(--dim);border-radius:var(--rs);padding:7px 12px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.78rem;flex-shrink:0">← Home</button>
+    <button onclick="App.goHome()" style="background:var(--sf);border:1px solid var(--bd2);
+      color:var(--txt);border-radius:var(--rs);padding:9px 14px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;
+      flex-shrink:0;transition:all .2s"
+      onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+      onmouseout="this.style.borderColor='var(--bd2)';this.style.color='var(--txt)'">
+      ← Home</button>
     <div style="flex:1">
       <div class="pbar-track"><div class="pbar-fill" id="v-pbar" style="width:0%"></div></div>
     </div>
