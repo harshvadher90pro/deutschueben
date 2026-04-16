@@ -485,7 +485,7 @@ svg.ring{transform:rotate(-90deg)}
 <!-- PLACEMENT TEST ACTIVITY -->
 <div id="s-diag" class="screen">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-    <button style="font-size:.78rem;color:var(--dim);padding:4px 0">Week test — complete to personalise your practice</div><div
+    <button style="font-size:.78rem;color:var(--dim);padding:4px 0;background:none;border:none">Week test — complete to personalise your practice</button>
     <div style="flex:1">
       <div class="pbar-track"><div class="pbar-fill" id="d-pbar" style="width:0%"></div></div>
     </div>
@@ -804,19 +804,39 @@ svg.ring{transform:rotate(-90deg)}
 "use strict";
 const API="/api/generate";
 
+// ── SESSION CONFIG ──
+const SESSION_KEY="du_session";
+const SESSION_DURATION=15*24*60*60*1000; // 15 days in ms
+
 // ── PER-USER STORAGE ──
-function cu(){return sessionStorage.getItem("du_user")||"guest";}
+function cu(){
+  const ss=sessionStorage.getItem("du_user");
+  if(ss)return ss;
+  try{
+    const d=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");
+    if(d&&d.user){
+      if(d.expires>Date.now())return d.user;
+      localStorage.removeItem(SESSION_KEY); // clean up expired session
+    }
+  }catch(e){}
+  return"guest";
+}
 function ls(k){return localStorage.getItem(cu()+"_"+k);}
 function lss(k,v){localStorage.setItem(cu()+"_"+k,v);}
 function lsd(k){localStorage.removeItem(cu()+"_"+k);}
 
+function stopAutoSave(){if(_autoSave){clearInterval(_autoSave);_autoSave=null;}}
+
 function logout(){
+  saveS();
+  localStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem("du_auth");
   sessionStorage.removeItem("du_user");
-  // Reset UI fields
+  stopAutoSave();
   document.getElementById("login-user").value="";
   document.getElementById("login-pass").value="";
   SS("s-login");
+  toast("👋 Logged out");
 }
 
 // ── CREDENTIALS (5 users) ──
@@ -833,9 +853,12 @@ function doLogin(){
   const u=(document.getElementById("login-user")?.value||"").trim().toLowerCase();
   const p=(document.getElementById("login-pass")?.value||"").trim();
   if(USERS[u]&&USERS[u]===p){
+    localStorage.setItem(SESSION_KEY,JSON.stringify({user:u,expires:Date.now()+SESSION_DURATION}));
     sessionStorage.setItem("du_auth","1");
-    sessionStorage.setItem("du_user", u);
+    sessionStorage.setItem("du_user",u);
     document.getElementById("login-err").style.display="none";
+    document.getElementById("login-user").value="";
+    document.getElementById("login-pass").value="";
     SS("s-home"); init();
   }else{
     document.getElementById("login-err").style.display="block";
@@ -844,8 +867,19 @@ function doLogin(){
   }
 }
 function checkAuth(){
-  if(sessionStorage.getItem("du_auth")!=="1"){SS("s-login");return false;}
-  return true;
+  if(sessionStorage.getItem("du_auth")==="1")return true;
+  try{
+    const d=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");
+    if(d&&d.user){
+      if(d.expires>Date.now()){
+        sessionStorage.setItem("du_auth","1");
+        sessionStorage.setItem("du_user",d.user);
+        return true;
+      }
+      localStorage.removeItem(SESSION_KEY); // clean up expired session
+    }
+  }catch(e){}
+  SS("s-login");return false;
 }
 
 // ── QUESTION CACHE (save API credits) ──
@@ -914,7 +948,7 @@ const PHRASES=["Viel Erfolg! 🍀","Du schaffst das! 💪","Weiter so! ⭐","Los
 const TOASTS=["Richtig! 🎯","Super! 🌟","Weiter so! ✨","Stark! 💪","Prima! 🎉"];
 let S={dayCount:1,streak:0,lastVisit:null,history:[]};
 let G={},V={},W={};
-function loadS(){try{const d=localStorage.getItem("du_v4");if(d)S={...S,...JSON.parse(d)};}catch(e){}}
+function loadS(){try{const d=ls("state");if(d)S={...S,...JSON.parse(d)};}catch(e){}}
 function saveS(){try{lss("state",JSON.stringify(S));}catch(e){}}
 function gTopicIdx(){return Math.min(Math.floor((S.dayCount-1)/3),GRAMMAR_TOPICS.length-1);}
 function vThemeIdx(){return Math.min(Math.floor((S.dayCount-1)/3),VOCAB_THEMES.length-1);}
@@ -945,9 +979,9 @@ async function callAPI(prompt,max_tokens){
   const d=await r.json();if(d.error)throw new Error(d.error);
   return d.choices?.[0]?.message?.content||"";
 }
+let _autoSave=null;
 function init(){
-  // Check if called from login or page load
-  if(!sessionStorage.getItem("du_auth")){SS("s-login");return;}
+  if(!checkAuth())return;
   loadS();
   const today=new Date().toDateString();
   if(S.lastVisit!==today){
@@ -956,6 +990,8 @@ function init(){
     if(S.lastVisit&&S.lastVisit!==today)S.dayCount++;
     S.lastVisit=today;saveS();
   }
+  stopAutoSave();
+  _autoSave=setInterval(saveS,30000);
   renderHome();
 }
 function renderHome(){
@@ -2027,7 +2063,8 @@ function finishDiag(){
 }
 
 const App={startGrammar,startVocab,startWriting,submitWriting,startDailyWriting,submitDailyWriting,startDiag,goHome:()=>SS("s-home"),toggleHistory};
-init();
+window.addEventListener("beforeunload",saveS);
+document.addEventListener("DOMContentLoaded",init);
 </script>
 </body>
 </html>
