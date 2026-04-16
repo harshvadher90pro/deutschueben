@@ -348,7 +348,7 @@ svg.ring{transform:rotate(-90deg)}
 <div id="s-login" class="screen active">
   <div style="text-align:center;padding:50px 0 32px">
     <div class="logo">Deutsch<em>Üben</em></div>
-    <div class="sub">A2 → B1 Daily Practice</div>
+    <div class="sub">A2 &rarr; B1 Daily Practice</div>
   </div>
   <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:28px 24px;margin-bottom:16px">
     <div style="font-size:.9rem;color:var(--dim);margin-bottom:20px;text-align:center">Enter your access credentials</div>
@@ -378,9 +378,23 @@ svg.ring{transform:rotate(-90deg)}
 
 <!-- HOME -->
 <div id="s-home" class="screen">
-  <div style="text-align:center;padding:30px 0 22px">
+  <div style="display:flex;align-items:center;justify-content:space-between;
+    padding:16px 0 0;margin-bottom:-10px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:1rem">👤</span>
+      <span id="h-username" style="font-size:.82rem;color:var(--gold);font-weight:600"></span>
+    </div>
+    <button onclick="logout()" style="background:none;border:1px solid var(--bd);
+      color:var(--dim);border-radius:20px;padding:5px 14px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.75rem;transition:all .2s"
+      onmouseover="this.style.borderColor='var(--err)';this.style.color='var(--err)'"
+      onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--dim)'">
+      Logout
+    </button>
+  </div>
+  <div style="text-align:center;padding:18px 0 22px">
     <div class="logo">Deutsch<em>Üben</em></div>
-    <div class="sub">A2 → B1 Daily Practice</div>
+    <div class="sub">A2 &rarr; B1 Daily Practice</div>
   </div>
   <div class="stats-row">
     <div class="stat"><div class="stat-v" id="h-day">1</div><div class="stat-l">Day</div></div>
@@ -427,6 +441,25 @@ svg.ring{transform:rotate(-90deg)}
     </div>
   </div>
 
+  <!-- Placement test banner (shown when no weakness data) -->
+  <div id="h-diag-banner" style="display:none;background:rgba(244,196,48,.07);
+    border:1px solid rgba(244,196,48,.25);border-radius:var(--r);
+    padding:16px 18px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:1.6rem">🎯</span>
+      <div style="flex:1">
+        <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:3px">
+          Take Your Placement Test
+        </div>
+        <div style="font-size:.78rem;color:var(--dim)">
+          ~10 min · Identifies your weak areas · Personalises all practice
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-gold" style="margin-top:12px;padding:13px"
+      onclick="App.startDiag()">Start Placement Test →</button>
+  </div>
+
   <button class="btn btn-ghost" style="margin-top:4px" onclick="App.toggleHistory()">📊 Progress History</button>
   <div id="token-info" style="text-align:center;margin-top:10px;font-size:.72rem;color:var(--dim)"></div>
   <div id="h-hist" style="display:none">
@@ -442,6 +475,69 @@ svg.ring{transform:rotate(-90deg)}
   </div>
 </div>
 
+<!-- PLACEMENT TEST LOADING -->
+<div id="s-dload" class="screen">
+  <div class="load-wrap"><div class="loader"></div>
+    <div class="load-msg">Building your placement test…</div>
+    <div class="load-phrase">Lass uns schauen, was du kannst! 🎯</div>
+  </div>
+</div>
+
+<!-- PLACEMENT TEST ACTIVITY -->
+<div id="s-diag" class="screen">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <button onclick="skipDiag()" style="background:none;border:1px solid var(--bd);
+      color:var(--dim);border-radius:var(--rs);padding:7px 12px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.78rem">Skip</button>
+    <div style="flex:1">
+      <div class="pbar-track"><div class="pbar-fill" id="d-pbar" style="width:0%"></div></div>
+    </div>
+    <div class="pbar-lbl" id="d-plbl" style="margin-left:6px">1/15</div>
+  </div>
+  <div style="background:rgba(244,196,48,.06);border:1px solid rgba(244,196,48,.2);
+    border-radius:var(--rs);padding:8px 14px;margin-bottom:14px;font-size:.78rem;color:var(--gold)">
+    🎯 Placement Test — Quick MCQ only, no pressure!
+  </div>
+  <div id="d-body"></div>
+</div>
+
+<!-- PLACEMENT TEST RESULTS -->
+<div id="s-dres" class="screen">
+  <div style="text-align:center;padding:10px 0 16px">
+    <div style="font-size:2.5rem;margin-bottom:8px">🗺️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;
+      color:var(--gold);margin-bottom:6px">Your Learning Profile</div>
+    <div style="color:var(--dim);font-size:.88rem">Based on your placement test</div>
+  </div>
+
+  <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+    overflow:hidden;margin-bottom:14px">
+    <div style="padding:14px 18px;border-bottom:1px solid var(--bd);
+      font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">
+      Grammar Areas — Skill Level
+    </div>
+    <div style="padding:14px 18px" id="d-bars"></div>
+  </div>
+
+  <div id="d-weak-section" style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);
+    border-radius:var(--r);padding:16px 18px;margin-bottom:14px">
+    <div style="font-size:.8rem;font-weight:600;color:var(--err);margin-bottom:8px">
+      ⚠️ Focus Areas — Grammar practice will prioritise these:
+    </div>
+    <div id="d-weak-chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+  </div>
+
+  <div id="d-strong-section" style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);
+    border-radius:var(--r);padding:16px 18px;margin-bottom:18px">
+    <div style="font-size:.8rem;font-weight:600;color:var(--ok);margin-bottom:8px">
+      ✅ Strong Areas — Keep it up!
+    </div>
+    <div id="d-strong-chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+  </div>
+
+  <button class="btn btn-gold" onclick="finishDiag()">Start Personalised Practice →</button>
+</div>
+
 <!-- GRAMMAR LOADING -->
 <div id="s-gload" class="screen">
   <div class="load-wrap"><div class="loader"></div>
@@ -452,11 +548,14 @@ svg.ring{transform:rotate(-90deg)}
 
 <!-- GRAMMAR ACTIVITY -->
 <div id="s-act" class="screen">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-    <div style="flex:1;margin-right:12px">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <button onclick="stopGTimer();App.goHome()" style="background:none;border:1px solid var(--bd);
+      color:var(--dim);border-radius:var(--rs);padding:7px 12px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.78rem;white-space:nowrap;flex-shrink:0">← Home</button>
+    <div style="flex:1">
       <div class="pbar-track"><div class="pbar-fill" id="g-pbar" style="width:0%"></div></div>
     </div>
-    <div class="pbar-lbl" id="g-plbl" style="margin-right:10px">1/15</div>
+    <div class="pbar-lbl" id="g-plbl" style="margin:0 6px">1/15</div>
     <div class="timer-wrap">
       <span class="timer-icon">⏱</span>
       <span class="timer-val" id="g-timer">25:00</span>
@@ -495,9 +594,14 @@ svg.ring{transform:rotate(-90deg)}
 
 <!-- ARTIKEL GAME -->
 <div id="s-vgame" class="screen">
-  <div class="pbar-row">
-    <div class="pbar-track"><div class="pbar-fill" id="v-pbar" style="width:0%"></div></div>
-    <div class="pbar-lbl" id="v-plbl">1/30</div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <button onclick="App.goHome()" style="background:none;border:1px solid var(--bd);
+      color:var(--dim);border-radius:var(--rs);padding:7px 12px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.78rem;flex-shrink:0">← Home</button>
+    <div style="flex:1">
+      <div class="pbar-track"><div class="pbar-fill" id="v-pbar" style="width:0%"></div></div>
+    </div>
+    <div class="pbar-lbl" id="v-plbl" style="margin-left:6px">1/30</div>
   </div>
   <div class="art-sbar">
     <span id="v-theme" style="color:var(--gold);font-size:.8rem;font-weight:600"></span>
@@ -694,6 +798,22 @@ svg.ring{transform:rotate(-90deg)}
 <script>
 "use strict";
 const API="/api/generate";
+
+// ── PER-USER STORAGE ──
+function cu(){return sessionStorage.getItem("du_user")||"guest";}
+function ls(k){return localStorage.getItem(cu()+"_"+k);}
+function lss(k,v){localStorage.setItem(cu()+"_"+k,v);}
+function lsd(k){localStorage.removeItem(cu()+"_"+k);}
+
+function logout(){
+  sessionStorage.removeItem("du_auth");
+  sessionStorage.removeItem("du_user");
+  // Reset UI fields
+  document.getElementById("login-user").value="";
+  document.getElementById("login-pass").value="";
+  SS("s-login");
+}
+
 // ── CREDENTIALS (5 users) ──
 const USERS={
   "harsh":    "DeutschGuru1",
@@ -709,6 +829,7 @@ function doLogin(){
   const p=(document.getElementById("login-pass")?.value||"").trim();
   if(USERS[u]&&USERS[u]===p){
     sessionStorage.setItem("du_auth","1");
+    sessionStorage.setItem("du_user", u);
     document.getElementById("login-err").style.display="none";
     SS("s-home"); init();
   }else{
@@ -725,7 +846,7 @@ function checkAuth(){
 // ── QUESTION CACHE (save API credits) ──
 function getCached(key){
   try{
-    const d=localStorage.getItem("qc_"+key);
+    const d=ls("qc_"+key);
     if(!d)return null;
     const o=JSON.parse(d);
     if(o.date===new Date().toDateString())return o.data;
@@ -733,7 +854,7 @@ function getCached(key){
   }catch(e){return null;}
 }
 function setCache(key,data){
-  try{localStorage.setItem("qc_"+key,JSON.stringify({date:new Date().toDateString(),data}));}catch(e){}
+  try{lss("qc_"+key,JSON.stringify({date:new Date().toDateString(),data}));}catch(e){}
 }
 
 // ── TOKEN USAGE TRACKER ──
@@ -741,8 +862,8 @@ let todayTokens=0;
 function trackTokens(est){
   todayTokens+=est;
   const k="tokens_"+new Date().toDateString();
-  const cur=parseInt(localStorage.getItem(k)||"0");
-  localStorage.setItem(k, cur+est);
+  const cur=parseInt(ls(k)||"0");
+  lss(k, cur+est);
 }
 
 const GRAMMAR_TOPICS=[
@@ -789,7 +910,7 @@ const TOASTS=["Richtig! 🎯","Super! 🌟","Weiter so! ✨","Stark! 💪","Prim
 let S={dayCount:1,streak:0,lastVisit:null,history:[]};
 let G={},V={},W={};
 function loadS(){try{const d=localStorage.getItem("du_v4");if(d)S={...S,...JSON.parse(d)};}catch(e){}}
-function saveS(){try{localStorage.setItem("du_v4",JSON.stringify(S));}catch(e){}}
+function saveS(){try{lss("state",JSON.stringify(S));}catch(e){}}
 function gTopicIdx(){return Math.min(Math.floor((S.dayCount-1)/3),GRAMMAR_TOPICS.length-1);}
 function vThemeIdx(){return Math.min(Math.floor((S.dayCount-1)/3),VOCAB_THEMES.length-1);}
 function diff(){return Math.min(10,Math.ceil(S.dayCount/2));}
@@ -835,6 +956,9 @@ function init(){
 function renderHome(){
   const gt=GRAMMAR_TOPICS[gTopicIdx()];
   const vt=VOCAB_THEMES[vThemeIdx()];
+  // Show username
+  const unEl=document.getElementById("h-username");
+  if(unEl)unEl.textContent=cu().charAt(0).toUpperCase()+cu().slice(1);
   document.getElementById("h-day").textContent=S.dayCount;
   document.getElementById("h-streak").textContent="🔥"+S.streak;
   document.getElementById("h-lvl").textContent=lvlLbl();
@@ -842,9 +966,13 @@ function renderHome(){
   document.getElementById("h-gdiff").textContent=stars(diff())+" Difficulty";
   document.getElementById("h-vtheme").textContent=vt.en+" · "+vt.level;
   document.getElementById("h-vlvl").textContent="30 Wörter";
-  const tk=localStorage.getItem("tokens_"+new Date().toDateString())||"0";
+  const tk=ls("tokens_"+new Date().toDateString())||"0";
   const tel=document.getElementById("token-info");
   if(tel)tel.textContent=`Today: ~${parseInt(tk).toLocaleString()} tokens used`;
+
+  // Show placement test banner if never taken
+  const diagBanner = document.getElementById("h-diag-banner");
+  if (diagBanner) diagBanner.style.display = shouldShowDiag() ? "" : "none";
 
   // Writing card
   const p=getTodayPrompt();
@@ -867,7 +995,7 @@ function renderHome(){
   }
 
   // Writing done today?
-  const wDone=localStorage.getItem("dw_done_"+S.dayCount);
+  const wDone=ls("dw_done_"+S.dayCount);
   const dwCard=document.getElementById("h-write-card");
   if(dwCard&&wDone){
     dwCard.style.opacity=".7";
@@ -1432,15 +1560,63 @@ function renderWFeed(f){
 function toggleHistory(){
   const el=document.getElementById("h-hist");
   if(el.style.display==="none"){
-    if(!S.history.length){toast("No sessions yet!");return;}
-    document.getElementById("h-hist-grid").innerHTML=S.history.slice(0,8).map(h=>`
-<div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);padding:11px 13px;font-size:.8rem">
-  <strong style="color:var(--gold);font-size:.95rem">${h.pct}%</strong>
-  <span style="color:var(--dim);font-size:.72rem;margin-left:4px">${h.type||""}</span><br>
-  Day ${h.day} · ${(h.topic||"").split(" ").slice(0,3).join(" ")}<br>
-  <span style="color:var(--dim);font-size:.72rem">${h.date||""}</span>
-</div>`).join("");
+    const grid=document.getElementById("h-hist-grid");
+    const tops=getTopWeaknesses(5);
+    const gSess=S.history.filter(h=>h.type==="grammar");
+    const vSess=S.history.filter(h=>h.type==="vocab");
+    const gAvg=gSess.length?Math.round(gSess.reduce((a,h)=>a+h.pct,0)/gSess.length):0;
+    const vAvg=vSess.length?Math.round(vSess.reduce((a,h)=>a+h.pct,0)/vSess.length):0;
+    const wDays=[];
+    for(let i=1;i<=S.dayCount;i++){if(ls("dw_done_"+i))wDays.push(i);}
+
+    grid.innerHTML=`
+<div style="grid-column:1/-1;background:var(--sf);border:1px solid var(--bd);
+  border-radius:var(--r);padding:14px 16px;margin-bottom:4px">
+  <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">
+    📊 Your Progress — ${cu()}
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+    <div style="text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold)">${gSess.length}</div>
+      <div style="font-size:.7rem;color:var(--dim)">Grammar sessions</div>
+      <div style="font-size:.8rem;color:var(--txt)">${gAvg}% avg</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--der)">${vSess.length}</div>
+      <div style="font-size:.7rem;color:var(--dim)">Vocab sessions</div>
+      <div style="font-size:.8rem;color:var(--txt)">${vAvg}% avg</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--ok)">${wDays.length}</div>
+      <div style="font-size:.7rem;color:var(--dim)">Writing tasks</div>
+      <div style="font-size:.8rem;color:var(--txt)">done</div>
+    </div>
+  </div>
+  ${tops.length?`<div style="font-size:.72rem;color:var(--dim);margin-bottom:6px">⚠️ Areas needing work:</div>
+  <div style="display:flex;flex-wrap:wrap;gap:5px">
+    ${tops.map((k,i)=>`<span style="padding:3px 9px;border-radius:20px;font-size:.72rem;
+      background:rgba(248,113,113,${0.15-i*0.02});color:var(--err);
+      border:1px solid rgba(248,113,113,.2)">${esc(WEAK_LABELS[k]||k)}</span>`).join("")}
+  </div>`:`<div style="font-size:.78rem;color:var(--ok)">✅ No major weak areas tracked yet — keep writing!</div>`}
+</div>
+${S.history.slice(0,6).map(h=>`
+<div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;font-size:.8rem">
+  <strong style="color:var(--gold);font-size:.92rem">${h.pct}%</strong>
+  <span style="color:var(--dim);font-size:.7rem;margin-left:4px">${h.type||""}</span><br>
+  Day ${h.day} · ${(h.topic||"").split(" ").slice(0,2).join(" ")}<br>
+  <span style="color:var(--dim);font-size:.7rem">${h.date||""}</span>
+</div>`).join("")}`;
     el.style.display="";
+    // Add retake option
+    const retakeDiv=document.createElement("div");
+    retakeDiv.style.cssText="grid-column:1/-1;text-align:center;margin-top:8px";
+    retakeDiv.innerHTML=`<button onclick="lsd('diag_done');renderHome();SS('s-home');"
+      style="background:none;border:1px solid var(--bd);color:var(--dim);
+      border-radius:var(--rs);padding:8px 18px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.78rem">
+      🔄 Retake Placement Test
+    </button>`;
+    document.getElementById("h-hist-grid").appendChild(retakeDiv);
   }else{el.style.display="none";}
 }
 
@@ -1463,18 +1639,18 @@ const WEAK_TO_TOPIC={
 };
 
 function getWeaknesses(){
-  try{return JSON.parse(localStorage.getItem("du_weaknesses")||"{}");}catch(e){return{};}
+  try{return JSON.parse(ls("weaknesses")||"{}");}catch(e){return{};}
 }
 function updateWeaknesses(cats){
   const w=getWeaknesses();
   (cats||[]).forEach(c=>{if(WEAK_LABELS[c])w[c]=(w[c]||0)+1;});
-  localStorage.setItem("du_weaknesses",JSON.stringify(w));
+  lss("weaknesses",JSON.stringify(w));
 }
 function decayWeaknesses(cats){
   // Reduce score when user practises a topic (shows improvement)
   const w=getWeaknesses();
   (cats||[]).forEach(c=>{if(w[c])w[c]=Math.max(0,w[c]-1);});
-  localStorage.setItem("du_weaknesses",JSON.stringify(w));
+  lss("weaknesses",JSON.stringify(w));
 }
 function getTopWeaknesses(n){
   const w=getWeaknesses();
@@ -1583,7 +1759,7 @@ weak_areas must be array of category keys only from the list above. Max 5 correc
     // Save weaknesses
     if(p2.weak_areas?.length) updateWeaknesses(p2.weak_areas);
     // Mark writing done today
-    localStorage.setItem("dw_done_"+S.dayCount,"1");
+    lss("dw_done_"+S.dayCount,"1");
     renderDailyFeedback(p2);
   }catch(e){
     SS("s-dwrite");
@@ -1631,7 +1807,207 @@ function renderDailyFeedback(f){
 // UPDATE renderHome TO SHOW WRITING CARD + WEAKNESSES
 // ═══════════════════════════════════════════
 
-const App={startGrammar,startVocab,startWriting,submitWriting,startDailyWriting,submitDailyWriting,goHome:()=>SS("s-home"),toggleHistory};
+
+// ═══════════════════════════════════════════
+// PLACEMENT / DIAGNOSTIC TEST
+// ═══════════════════════════════════════════
+const DIAG_CATEGORIES = {
+  present_tense:    "Present Tense",
+  articles:         "Articles (der/die/das)",
+  plural:           "Plural Forms",
+  accusative:       "Accusative Case",
+  dative:           "Dative Case",
+  perfekt:          "Perfekt Tense",
+  modal_verbs:      "Modal Verbs",
+  adjective_endings:"Adjective Endings",
+  subordinate_clauses:"Subordinate Clauses",
+  word_order:       "Word Order",
+  prepositions:     "Prepositions",
+  verb_conjugation: "Verb Conjugation"
+};
+
+// Map diag categories to weakness keys + grammar topic indices
+const DIAG_TO_WEAK = {
+  present_tense:"verb_conjugation", articles:"articles", plural:"plurals",
+  accusative:"cases", dative:"cases", perfekt:"perfekt",
+  modal_verbs:"modal_verbs", adjective_endings:"adjective_endings",
+  subordinate_clauses:"subordinate_clauses", word_order:"word_order",
+  prepositions:"prepositions", verb_conjugation:"verb_conjugation"
+};
+
+let D = {}; // diagnostic session
+
+function shouldShowDiag() {
+  const w = getWeaknesses();
+  const done = ls("diag_done");
+  return !done && Object.keys(w).length === 0;
+}
+
+async function startDiag() {
+  document.getElementById("h-diag-banner").style.display = "none";
+  SS("s-dload");
+
+  const prompt = `You are a German A2 teacher. Create exactly 15 diagnostic MCQ questions covering ALL major A2 grammar areas.
+Include exactly these categories (1-2 questions each):
+present_tense, articles, plural, accusative, dative, perfekt, modal_verbs, adjective_endings, subordinate_clauses, word_order, prepositions, verb_conjugation
+
+Rules:
+- Questions must be clear and unambiguous
+- 4 options each, one clearly correct
+- Mix of German fill-in and English grammar questions
+- Difficulty: medium A2 (not too easy, not B1)
+- Each question tagged with its category
+
+Return ONLY valid JSON:
+{"questions":[
+  {"type":"mcq","question":"question text","options":["a","b","c","d"],"answer":"exact option text","explanation":"brief rule","category":"perfekt"},
+  ...15 total
+]}`;
+
+  try {
+    const raw = await callAPI(prompt, 1800);
+    trackTokens(2000);
+    const p = xJSON(raw);
+    if (!p.questions?.length) throw new Error("No questions");
+    D = { qs: p.questions, cur: 0, scores: {}, answered: false };
+    SS("s-diag");
+    renderDiagQ();
+  } catch(e) {
+    SS("s-home");
+    toast("⚠️ " + e.message.slice(0, 50));
+    console.error(e);
+  }
+}
+
+function renderDiagQ() {
+  const q = D.qs[D.cur], tot = D.qs.length;
+  D.answered = false;
+  document.getElementById("d-pbar").style.width = `${(D.cur/tot)*100}%`;
+  document.getElementById("d-plbl").textContent = `${D.cur+1}/${tot}`;
+
+  const cat = DIAG_CATEGORIES[q.category] || q.category || "Grammar";
+  const body = document.getElementById("d-body");
+  body.innerHTML = `
+<span class="chip chip-mc">📝 ${esc(cat)}</span>
+<div class="qcard"><div class="qtext">${esc(q.question)}</div></div>
+<div class="opts">
+  ${q.options.map((o,i) => `<button class="obtn" id="do${i}" onclick="checkDiagQ(${i})">${esc(o)}</button>`).join("")}
+</div>
+<div class="fb" id="dfb"></div>
+<button class="nxtbtn" id="dnxt" onclick="diagNext()">Next →</button>`;
+  body.style.animation = "none"; void body.offsetHeight; body.style.animation = "rise .3s ease";
+}
+
+function checkDiagQ(idx) {
+  if (D.answered) return;
+  D.answered = true;
+  const q = D.qs[D.cur];
+  const ok = q.options[idx] === q.answer;
+  const cat = q.category || "general";
+
+  q.options.forEach((o, i) => {
+    const b = document.getElementById(`do${i}`);
+    b.disabled = true;
+    if (o === q.answer) b.classList.add("cor");
+    else if (i === idx) b.classList.add("wrg");
+  });
+
+  // Track per-category score
+  if (!D.scores[cat]) D.scores[cat] = { correct: 0, total: 0 };
+  D.scores[cat].total++;
+  if (ok) { D.scores[cat].correct++; toast(ok ? "✓" : ""); }
+
+  const fb = document.getElementById("dfb");
+  if (fb) {
+    fb.className = `fb show ${ok ? "fb-ok" : "fb-err"}`;
+    fb.innerHTML = ok
+      ? `<div class="fb-hd">✅ Correct!</div>`
+      : `<div class="fb-hd">❌ Correct: <strong>${esc(q.answer)}</strong></div><div class="fb-ex">${esc(q.explanation||"")}</div>`;
+  }
+  document.getElementById("dnxt").classList.add("show");
+}
+
+function diagNext() {
+  D.cur++;
+  if (D.cur >= D.qs.length) showDiagResults();
+  else renderDiagQ();
+}
+
+function skipDiag() {
+  lss("diag_done", "1");
+  SS("s-home");
+  renderHome();
+}
+
+function showDiagResults() {
+  // Calculate weak/strong areas
+  const weak = [], strong = [], barData = [];
+
+  Object.entries(D.scores).forEach(([cat, { correct, total }]) => {
+    const pct = Math.round((correct / total) * 100);
+    const label = DIAG_CATEGORIES[cat] || cat;
+    barData.push({ cat, label, pct });
+    if (pct < 60) weak.push(cat);
+    else strong.push(cat);
+  });
+
+  // Set initial weaknesses (higher score = bigger problem)
+  const initWeak = {};
+  weak.forEach(cat => {
+    const weakKey = DIAG_TO_WEAK[cat] || cat;
+    const pct = D.scores[cat] ? Math.round((D.scores[cat].correct/D.scores[cat].total)*100) : 0;
+    initWeak[weakKey] = (initWeak[weakKey]||0) + Math.ceil((100 - pct) / 20);
+  });
+  lss("weaknesses", JSON.stringify(initWeak));
+  lss("diag_done", "1");
+
+  // Sort bars: weakest first
+  barData.sort((a, b) => a.pct - b.pct);
+
+  // Render skill bars
+  document.getElementById("d-bars").innerHTML = barData.map(({ label, pct }) => {
+    const col = pct >= 70 ? "var(--ok)" : pct >= 40 ? "#fbbf24" : "var(--err)";
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px">
+        <span style="color:var(--txt)">${esc(label)}</span>
+        <span style="color:${col};font-weight:600">${pct}%</span>
+      </div>
+      <div style="height:8px;background:var(--sf2);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${col};border-radius:4px;
+          transition:width 1s cubic-bezier(.16,1,.3,1)"></div>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Weak chips
+  document.getElementById("d-weak-chips").innerHTML = weak.map(cat =>
+    `<span class="wchip" style="background:rgba(248,113,113,.1);color:var(--err);
+      border:1px solid rgba(248,113,113,.2)">${esc(DIAG_CATEGORIES[cat]||cat)}</span>`
+  ).join("") || `<span style="color:var(--dim);font-size:.85rem">None! Great start 🎉</span>`;
+
+  // Strong chips
+  document.getElementById("d-strong-chips").innerHTML = strong.map(cat =>
+    `<span class="wchip wc-ok">${esc(DIAG_CATEGORIES[cat]||cat)}</span>`
+  ).join("") || `<span style="color:var(--dim);font-size:.85rem">Keep practising!</span>`;
+
+  document.getElementById("d-weak-section").style.display = weak.length ? "" : "none";
+  document.getElementById("d-strong-section").style.display = strong.length ? "" : "none";
+
+  SS("s-dres");
+  // Animate bars after render
+  setTimeout(() => {
+    document.querySelectorAll("#d-bars div > div > div:last-child").forEach(el => {
+      const w = el.style.width; el.style.width = "0"; setTimeout(() => el.style.width = w, 50);
+    });
+  }, 100);
+}
+
+function finishDiag() {
+  renderHome();
+  SS("s-home");
+}
+
+const App={startGrammar,startVocab,startWriting,submitWriting,startDailyWriting,submitDailyWriting,startDiag,goHome:()=>SS("s-home"),toggleHistory};
 init();
 </script>
 </body>
