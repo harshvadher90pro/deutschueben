@@ -485,7 +485,7 @@ svg.ring{transform:rotate(-90deg)}
 <!-- PLACEMENT TEST ACTIVITY -->
 <div id="s-diag" class="screen">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-    <button style="font-size:.78rem;color:var(--dim);padding:4px 0">Week test — complete to personalise your practice</div><div
+    <button style="font-size:.78rem;color:var(--dim);padding:4px 0">Week test — complete to personalise your practice</button>
     <div style="flex:1">
       <div class="pbar-track"><div class="pbar-fill" id="d-pbar" style="width:0%"></div></div>
     </div>
@@ -914,7 +914,7 @@ const PHRASES=["Viel Erfolg! 🍀","Du schaffst das! 💪","Weiter so! ⭐","Los
 const TOASTS=["Richtig! 🎯","Super! 🌟","Weiter so! ✨","Stark! 💪","Prima! 🎉"];
 let S={dayCount:1,streak:0,lastVisit:null,history:[]};
 let G={},V={},W={};
-function loadS(){try{const d=localStorage.getItem("du_v4");if(d)S={...S,...JSON.parse(d)};}catch(e){}}
+function loadS(){try{const d=ls("state");if(d)S={...S,...JSON.parse(d)};}catch(e){}}
 function saveS(){try{lss("state",JSON.stringify(S));}catch(e){}}
 function gTopicIdx(){return Math.min(Math.floor((S.dayCount-1)/3),GRAMMAR_TOPICS.length-1);}
 function vThemeIdx(){return Math.min(Math.floor((S.dayCount-1)/3),VOCAB_THEMES.length-1);}
