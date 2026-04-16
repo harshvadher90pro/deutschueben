@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeutschÜben · A2–B1 Daily Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0c10;--sf:#14141c;--sf2:#1c1c28;--sf3:#242438;--bd:#252535;--bd2:#32324a;
+  --gold:#f4c430;--gold2:#c9a020;--gbg:rgba(244,196,48,.08);--red:#cc2936;
+  --txt:#e8e8f0;--dim:#8888a0;--ok:#4ade80;--err:#f87171;--info:#60a5fa;
+  --der:#4a9eff;--die:#ff4a6a;--das:#4ade80;--r:14px;--rs:10px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--txt);
+  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+  padding:28px 16px 80px;line-height:1.5}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#000 33.3%,#cc2936 33.3% 66.6%,#f4c430 66.6%);z-index:999}
+#app{width:100%;max-width:560px}
+.screen{display:none}
+.screen.active{display:block;animation:rise .3s cubic-bezier(.16,1,.3,1)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.logo{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:900;
+  color:var(--gold);letter-spacing:-1.5px;line-height:1;text-shadow:0 0 60px rgba(244,196,48,.2)}
+.logo em{color:var(--txt);font-style:normal}
+.sub{color:var(--dim);font-size:.82rem;margin-top:6px;letter-spacing:.12em;text-transform:uppercase}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0 18px}
+.stat{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:16px 12px;text-align:center}
+.stat-v{font-family:"Playfair Display",serif;font-size:1.75rem;font-weight:700;
+  color:var(--gold);line-height:1}
+.stat-l{font-size:.7rem;color:var(--dim);margin-top:5px;text-transform:uppercase;letter-spacing:.08em}
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.mode-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:20px 16px;cursor:pointer;transition:all .2s}
+.mode-card:hover{border-color:var(--bd2);transform:translateY(-2px)}
+.mc-icon{font-size:1.8rem;margin-bottom:10px}
+.mc-title{font-size:.92rem;font-weight:600;margin-bottom:4px}
+.mc-desc{font-size:.75rem;color:var(--dim);line-height:1.4}
+.mc-badge{display:inline-block;font-size:.68rem;font-weight:600;padding:3px 9px;
+  border-radius:20px;margin-top:8px;text-transform:uppercase;letter-spacing:.06em}
+.bg-gold{background:var(--gbg);color:var(--gold)}
+.bg-blue{background:rgba(74,158,255,.12);color:var(--der)}
+.btn{display:block;width:100%;padding:16px;border:none;border-radius:var(--r);
+  font-family:"DM Sans",sans-serif;font-size:.97rem;font-weight:600;
+  cursor:pointer;text-align:center;transition:all .18s}
+.btn-gold{background:var(--gold);color:#0c0c10}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--bd);margin-top:10px}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.load-wrap{text-align:center;padding:80px 20px}
+.loader{width:44px;height:44px;border:2px solid var(--bd2);border-top-color:var(--gold);
+  border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 22px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-msg{color:var(--dim);font-size:.9rem}
+.load-phrase{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--gold);
+  margin-top:12px;font-style:italic}
+.pbar-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.pbar-track{flex:1;height:5px;background:var(--sf2);border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;background:var(--gold);border-radius:3px;
+  transition:width .4s cubic-bezier(.16,1,.3,1)}
+.pbar-lbl{font-size:.78rem;color:var(--dim);white-space:nowrap}
+.chip{display:inline-block;font-size:.7rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.1em;padding:4px 12px;border-radius:20px;margin-bottom:14px}
+.chip-fc{background:rgba(99,179,237,.12);color:#7ec8f5}
+.chip-mc{background:rgba(110,231,183,.12);color:#6ee7b7}
+.chip-fb{background:rgba(253,186,116,.12);color:#fdba74}
+.qcard{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:22px 20px;margin-bottom:14px}
+.qtext{font-size:1.08rem;line-height:1.6}
+.qhint{font-size:.8rem;color:var(--dim);font-style:italic;margin-top:5px}
+.opts{display:grid;gap:8px;margin-bottom:12px}
+.obtn{width:100%;padding:14px 18px;background:var(--sf);color:var(--txt);
+  border:1px solid var(--bd);border-radius:var(--rs);font-family:"DM Sans",sans-serif;
+  font-size:.95rem;cursor:pointer;text-align:left;transition:all .15s}
+.obtn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);background:var(--gbg)}
+.obtn.cor{background:rgba(74,222,128,.08);border-color:var(--ok);color:var(--ok)}
+.obtn.wrg{background:rgba(248,113,113,.08);border-color:var(--err);color:var(--err)}
+.obtn:disabled{cursor:default;opacity:.7}
+.obtn.cor,.obtn.wrg{opacity:1}
+.fc-wrap{perspective:1200px;margin-bottom:14px;cursor:pointer}
+.fc-in{position:relative;width:100%;height:200px;transform-style:preserve-3d;
+  transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.fc-in.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;background:var(--sf);border:1px solid var(--bd);
+  border-radius:var(--r);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.fc-back{transform:rotateY(180deg);background:var(--sf2);border-color:var(--gold)}
+.fc-front{font-family:"Playfair Display",serif;font-size:1.8rem;color:var(--gold);text-align:center}
+.fc-rear{font-size:.93rem;line-height:1.7;text-align:center;color:var(--txt);white-space:pre-line}
+.fc-tap{position:absolute;bottom:12px;font-size:.7rem;color:var(--dim)}
+.fc-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kbtn{padding:13px;border-radius:var(--r);border:none;font-family:"DM Sans",sans-serif;
+  font-size:.88rem;font-weight:500;cursor:pointer;transition:all .18s}
+.kbtn-y{background:rgba(74,222,128,.1);color:var(--ok);border:1px solid rgba(74,222,128,.25)}
+.kbtn-n{background:rgba(248,113,113,.08);color:var(--err);border:1px solid rgba(248,113,113,.22)}
+.kbtn-y:hover{background:rgba(74,222,128,.18)}
+.kbtn-n:hover{background:rgba(248,113,113,.16)}
+.fill-row{display:flex;gap:8px;margin-bottom:10px}
+.fill-in{flex:1;padding:14px 16px;background:var(--sf);color:var(--txt);
+  border:1px solid var(--bd);border-radius:var(--rs);font-family:"DM Sans",sans-serif;
+  font-size:1.05rem;outline:none;transition:border-color .2s}
+.fill-in:focus{border-color:var(--gold)}
+.fill-in.cor{border-color:var(--ok);background:rgba(74,222,128,.04)}
+.fill-in.wrg{border-color:var(--err);background:rgba(248,113,113,.04)}
+.chk-btn{padding:14px 18px;border:none;border-radius:var(--rs);
+  background:var(--gold);color:#0c0c10;font-family:"DM Sans",sans-serif;
+  font-size:.93rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .18s}
+.chk-btn:hover{background:var(--gold2)}
+.hint-btn{background:none;border:none;color:var(--dim);font-family:"DM Sans",sans-serif;
+  font-size:.78rem;cursor:pointer;text-decoration:underline;padding:0}
+.hint-btn:hover{color:var(--gold)}
+.fb{padding:14px 17px;border-radius:var(--rs);font-size:.87rem;
+  line-height:1.6;display:none;margin-bottom:12px}
+.fb.show{display:block;animation:rise .2s ease}
+.fb-ok{background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22)}
+.fb-err{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.22)}
+.fb-hd{font-weight:600;display:flex;align-items:center;gap:7px}
+.fb-ex{color:var(--dim);font-size:.82rem;margin-top:5px}
+.nxtbtn{width:100%;padding:14px;background:var(--sf2);color:var(--txt);
+  border:1px solid var(--bd);border-radius:var(--r);font-family:"DM Sans",sans-serif;
+  font-size:.95rem;font-weight:500;cursor:pointer;display:none;transition:all .18s}
+.nxtbtn.show{display:block;animation:rise .2s ease}
+.nxtbtn:hover{border-color:var(--gold);color:var(--gold)}
+.res-wrap{text-align:center;padding:12px 0}
+.res-icon{font-size:3.6rem;margin-bottom:14px}
+.res-title{font-family:"Playfair Display",serif;font-size:1.9rem;font-weight:700;
+  color:var(--gold);margin-bottom:6px}
+.res-sub{color:var(--dim);margin-bottom:24px;font-size:.93rem}
+.ring-wrap{margin:0 auto 24px;position:relative;width:110px;height:110px}
+svg.ring{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--sf2);stroke-width:8}
+.ring-fg{fill:none;stroke:var(--gold);stroke-width:8;stroke-linecap:round;
+  transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1)}
+.ring-lbl{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center}
+.ring-pct{font-family:"Playfair Display",serif;font-size:1.65rem;font-weight:700;
+  color:var(--gold);line-height:1}
+.ring-txt{font-size:.64rem;color:var(--dim);text-transform:uppercase;
+  letter-spacing:.08em;margin-top:2px}
+.res-list{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  overflow:hidden;text-align:left;margin-bottom:20px;max-height:260px;overflow-y:auto}
+.res-row{padding:12px 17px;border-bottom:1px solid var(--bd);
+  font-size:.84rem;display:flex;align-items:flex-start;gap:9px}
+.res-row:last-child{border-bottom:none}
+/* ARTIKEL GAME */
+.art-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:36px 24px;text-align:center;margin-bottom:16px;transition:border-color .4s}
+.art-cat{font-size:.72rem;color:var(--dim);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:12px}
+.art-word{font-family:"Playfair Display",serif;font-size:3rem;font-weight:900;
+  color:var(--txt);line-height:1;margin-bottom:4px}
+.art-plural{font-size:.82rem;color:var(--dim)}
+.art-reveal{padding:14px 0 2px;display:none;text-align:left;animation:rise .25s ease}
+.art-reveal.show{display:block}
+.art-ex{font-size:.93rem;line-height:1.6;margin-bottom:5px}
+.art-en{font-size:.82rem;color:var(--dim);font-style:italic}
+.hl-der{color:var(--der);font-weight:700}
+.hl-die{color:var(--die);font-weight:700}
+.hl-das{color:var(--das);font-weight:700}
+.art-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.abtn{padding:16px 8px;border:none;border-radius:var(--rs);font-family:"DM Sans",sans-serif;
+  font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.abtn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.abtn:disabled{cursor:default}
+.abtn.a-der{background:rgba(74,158,255,.15);color:var(--der);border:1px solid rgba(74,158,255,.3)}
+.abtn.a-die{background:rgba(255,74,106,.15);color:var(--die);border:1px solid rgba(255,74,106,.3)}
+.abtn.a-das{background:rgba(74,222,128,.12);color:var(--das);border:1px solid rgba(74,222,128,.28)}
+.abtn.a-cor{opacity:1!important;transform:scale(1.06)!important}
+.abtn.a-der.a-cor{background:rgba(74,158,255,.3);border-color:var(--der)}
+.abtn.a-die.a-cor{background:rgba(255,74,106,.3);border-color:var(--die)}
+.abtn.a-das.a-cor{background:rgba(74,222,128,.25);border-color:var(--das)}
+.abtn.a-wrg{opacity:.3!important}
+.art-sbar{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;font-size:.82rem;color:var(--dim)}
+/* VOCAB RESULTS */
+.vsummary{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  overflow:hidden;margin-bottom:16px}
+.vs-hd{padding:14px 18px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between}
+.vs-t{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.vs-s{font-family:"Playfair Display",serif;font-size:1.2rem;color:var(--gold)}
+.vs-words{padding:12px 18px;max-height:190px;overflow-y:auto;
+  display:flex;flex-wrap:wrap;gap:6px}
+.wchip{padding:5px 10px;border-radius:20px;font-size:.78rem;font-weight:500}
+.wc-ok{background:rgba(74,222,128,.1);color:var(--ok);border:1px solid rgba(74,222,128,.2)}
+.wc-er{background:rgba(248,113,113,.08);color:var(--err);border:1px solid rgba(248,113,113,.2)}
+.c-der{color:var(--der)}.c-die{color:var(--die)}.c-das{color:var(--das)}
+/* WRITING */
+.task-card{background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--gold);
+  border-radius:var(--r);padding:20px;margin-bottom:14px}
+.task-lbl{font-size:.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.task-txt{font-size:1rem;line-height:1.6;font-weight:500}
+.whints{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.whip{padding:5px 10px;border-radius:20px;font-size:.75rem;
+  background:var(--sf);border:1px solid var(--bd)}
+.write-area{width:100%;min-height:160px;padding:16px;
+  background:var(--sf);color:var(--txt);border:1px solid var(--bd);
+  border-radius:var(--r);font-family:"DM Sans",sans-serif;font-size:.95rem;
+  line-height:1.6;outline:none;resize:vertical;transition:border-color .2s}
+.write-area:focus{border-color:var(--gold)}
+.write-meta{display:flex;justify-content:space-between;font-size:.78rem;
+  color:var(--dim);margin-top:6px;margin-bottom:16px}
+.wc-n{color:var(--gold);font-weight:600}
+/* FEEDBACK */
+.fsec{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:18px 20px;margin-bottom:12px}
+.fhd{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--dim);margin-bottom:10px}
+.score-big{font-family:"Playfair Display",serif;font-size:2.2rem;font-weight:700;
+  color:var(--gold);margin-bottom:4px}
+.corr-item{padding:10px 0;border-bottom:1px solid var(--bd);font-size:.86rem}
+.corr-item:last-child{border-bottom:none}
+.co{color:var(--err);text-decoration:line-through;margin-bottom:3px}
+.cf{color:var(--ok);margin-bottom:3px}
+.ce{color:var(--dim);font-size:.8rem}
+.corr-txt{background:var(--sf2);border-radius:var(--rs);padding:14px 16px;
+  font-size:.9rem;line-height:1.7;white-space:pre-wrap;margin-top:8px}
+/* MISC */
+.err-panel{display:none;margin-top:14px;background:rgba(204,41,54,.1);
+  border:1px solid var(--red);border-radius:var(--r);padding:18px 20px}
+.divider{height:1px;background:var(--bd);margin:16px 0}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:var(--sf2);border:1px solid var(--bd2);border-radius:var(--rs);
+  padding:11px 20px;font-size:.86rem;opacity:0;pointer-events:none;
+  transition:all .3s;z-index:999;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.sec-title{font-family:"Playfair Display",serif;font-size:1.1rem;
+  color:var(--gold);margin-bottom:14px}
+@media(max-width:420px){.logo{font-size:2.2rem}.art-word{font-size:2.3rem}
+  .mode-cards{grid-template-columns:1fr}}
+
+/* ── TIMER ── */
+.timer-wrap{display:flex;align-items:center;gap:8px;padding:6px 14px;
+  background:var(--sf);border:1px solid var(--bd);border-radius:20px}
+.timer-icon{font-size:.8rem}
+.timer-val{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;
+  color:var(--gold);letter-spacing:.05em;min-width:40px}
+.timer-val.warn{color:#fbbf24}
+.timer-val.danger{color:var(--err);animation:pulse .6s ease infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:.5}}
+
+/* ── PERFEKT GAP ── */
+.pfk-table{width:100%;border-collapse:collapse;margin-bottom:12px}
+.pfk-table td{padding:8px 10px;font-size:.9rem;vertical-align:middle;
+  border-bottom:1px solid var(--bd)}
+.pfk-table td:first-child{color:var(--dim);font-size:.8rem;width:28px}
+.pfk-table .pfk-sent{line-height:1.7;flex:1}
+.pfk-sel{padding:6px 10px;background:var(--sf);color:var(--txt);
+  border:1px solid var(--bd);border-radius:6px;font-family:"DM Sans",sans-serif;
+  font-size:.88rem;outline:none;cursor:pointer;margin:0 4px;transition:border-color .2s}
+.pfk-sel:focus{border-color:var(--gold)}
+.pfk-in{width:120px;padding:6px 10px;background:var(--sf);color:var(--txt);
+  border:1px solid var(--bd);border-radius:6px;font-family:"DM Sans",sans-serif;
+  font-size:.88rem;outline:none;margin-left:4px;transition:border-color .2s}
+.pfk-in:focus{border-color:var(--gold)}
+.pfk-sel.ok,.pfk-in.ok{border-color:var(--ok);background:rgba(74,222,128,.05)}
+.pfk-sel.er,.pfk-in.er{border-color:var(--err);background:rgba(248,113,113,.05)}
+.pfk-hint{font-size:.78rem;color:var(--dim);font-style:italic}
+.pfk-submit{padding:10px 22px;background:var(--gold);color:#0c0c10;border:none;
+  border-radius:var(--rs);font-family:"DM Sans",sans-serif;font-size:.9rem;
+  font-weight:600;cursor:pointer;transition:background .18s}
+.pfk-submit:hover{background:var(--gold2)}
+
+/* ── REORDER ── */
+.reorder-pool{display:flex;flex-wrap:wrap;gap:7px;min-height:44px;
+  padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);
+  margin-bottom:10px}
+.reorder-ans{display:flex;flex-wrap:wrap;gap:7px;min-height:48px;
+  padding:12px;background:var(--sf2);border:2px dashed var(--bd2);
+  border-radius:var(--rs);margin-bottom:12px;align-content:flex-start}
+.word-chip-r{padding:8px 14px;border-radius:20px;font-size:.88rem;cursor:pointer;
+  user-select:none;transition:all .15s;font-family:"DM Sans",sans-serif}
+.chip-pool{background:var(--sf2);color:var(--txt);border:1px solid var(--bd2)}
+.chip-pool:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+.chip-ans{background:rgba(74,158,255,.15);color:var(--der);border:1px solid rgba(74,158,255,.3)}
+.chip-ans:hover{background:rgba(248,113,113,.12);color:var(--err);border-color:var(--err)}
+.reorder-label{font-size:.75rem;color:var(--dim);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+
+/* ── ERROR CORRECTION ── */
+.wrong-sent{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);
+  border-radius:var(--rs);padding:14px 16px;font-size:1rem;line-height:1.6;
+  color:var(--err);margin-bottom:14px;position:relative}
+.wrong-sent::before{content:"✗ ";font-weight:700}
+.errtype{font-size:.75rem;color:var(--dim);margin-bottom:10px;
+  background:var(--sf);border:1px solid var(--bd);border-radius:6px;
+  padding:4px 10px;display:inline-block}
+
+/* ── MATCHING ── */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.match-col{display:flex;flex-direction:column;gap:6px}
+.match-item{padding:12px 14px;border-radius:var(--rs);font-size:.9rem;
+  cursor:pointer;text-align:center;transition:all .18s;border:1px solid var(--bd);
+  background:var(--sf);user-select:none}
+.match-item:hover:not(.matched):not(.disabled){border-color:var(--gold);color:var(--gold)}
+.match-item.selected{border-color:var(--der);color:var(--der);background:rgba(74,158,255,.12)}
+.match-item.matched{border-color:var(--ok);color:var(--ok);background:rgba(74,222,128,.08);cursor:default}
+.match-item.wrong-match{border-color:var(--err);color:var(--err);background:rgba(248,113,113,.08)}
+.match-item.disabled{opacity:.5;cursor:default}
+.match-progress{font-size:.8rem;color:var(--dim);text-align:center;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- LOGIN -->
+<div id="s-login" class="screen active">
+  <div style="text-align:center;padding:50px 0 32px">
+    <div class="logo">Deutsch<em>Üben</em></div>
+    <div class="sub">A2 → B1 Daily Practice</div>
+  </div>
+  <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:28px 24px;margin-bottom:16px">
+    <div style="font-size:.9rem;color:var(--dim);margin-bottom:20px;text-align:center">Enter your access credentials</div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Username</div>
+      <input id="login-user" type="text" placeholder="Username"
+        style="width:100%;padding:14px 16px;background:var(--sf2);color:var(--txt);
+        border:1px solid var(--bd);border-radius:var(--rs);font-family:'DM Sans',sans-serif;
+        font-size:.95rem;outline:none" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div style="margin-bottom:20px">
+      <div style="font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Password</div>
+      <input id="login-pass" type="password" placeholder="Password"
+        style="width:100%;padding:14px 16px;background:var(--sf2);color:var(--txt);
+        border:1px solid var(--bd);border-radius:var(--rs);font-family:'DM Sans',sans-serif;
+        font-size:.95rem;outline:none" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-gold" onclick="doLogin()">Login →</button>
+    <div id="login-err" style="display:none;margin-top:12px;color:var(--err);font-size:.85rem;text-align:center">
+      ❌ Wrong username or password
+    </div>
+  </div>
+  <div style="text-align:center;color:var(--dim);font-size:.75rem">
+    Contact your admin for access credentials
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="s-home" class="screen">
+  <div style="text-align:center;padding:30px 0 22px">
+    <div class="logo">Deutsch<em>Üben</em></div>
+    <div class="sub">A2 → B1 Daily Practice</div>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-v" id="h-day">1</div><div class="stat-l">Day</div></div>
+    <div class="stat"><div class="stat-v" id="h-streak">🔥0</div><div class="stat-l">Streak</div></div>
+    <div class="stat"><div class="stat-v" id="h-lvl">A2</div><div class="stat-l">Level</div></div>
+  </div>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="App.startGrammar()">
+      <div class="mc-icon">✏️</div>
+      <div class="mc-title">Grammar Practice</div>
+      <div class="mc-desc" id="h-gtopic">Fill blanks · MCQ · Flashcards</div>
+      <span class="mc-badge bg-gold" id="h-gdiff">—</span>
+    </div>
+    <div class="mode-card" onclick="App.startVocab()">
+      <div class="mc-icon">🎯</div>
+      <div class="mc-title">Wörter des Tages</div>
+      <div class="mc-desc" id="h-vtheme">30 new words · der/die/das game</div>
+      <span class="mc-badge bg-blue" id="h-vlvl">—</span>
+    </div>
+  </div>
+  <button class="btn btn-ghost" style="margin-top:4px" onclick="App.toggleHistory()">📊 Progress History</button>
+  <div id="token-info" style="text-align:center;margin-top:10px;font-size:.72rem;color:var(--dim)"></div>
+  <div id="h-hist" style="display:none">
+    <div class="divider"></div>
+    <div id="h-hist-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+  </div>
+  <div id="err-panel" class="err-panel">
+    <div style="color:#f87171;font-weight:600;margin-bottom:7px">⚠️ Could not load questions</div>
+    <div id="err-msg" style="color:#c0c0d0;font-size:.84rem;word-break:break-word;margin-bottom:10px"></div>
+    <div style="color:var(--dim);font-size:.78rem">Check Netlify function logs or your API key.</div>
+    <button onclick="hideError()" style="margin-top:10px;background:none;border:1px solid var(--red);
+      color:#f87171;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:.8rem">Dismiss</button>
+  </div>
+</div>
+
+<!-- GRAMMAR LOADING -->
+<div id="s-gload" class="screen">
+  <div class="load-wrap"><div class="loader"></div>
+    <div class="load-msg">Generating 15 grammar exercises…</div>
+    <div class="load-phrase" id="g-phrase">Viel Erfolg! 🍀</div>
+  </div>
+</div>
+
+<!-- GRAMMAR ACTIVITY -->
+<div id="s-act" class="screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="flex:1;margin-right:12px">
+      <div class="pbar-track"><div class="pbar-fill" id="g-pbar" style="width:0%"></div></div>
+    </div>
+    <div class="pbar-lbl" id="g-plbl" style="margin-right:10px">1/15</div>
+    <div class="timer-wrap">
+      <span class="timer-icon">⏱</span>
+      <span class="timer-val" id="g-timer">25:00</span>
+    </div>
+  </div>
+  <div id="g-body"></div>
+</div>
+
+<!-- GRAMMAR RESULTS -->
+<div id="s-gres" class="screen">
+  <div class="res-wrap">
+    <div class="res-icon" id="gr-icon">🎉</div>
+    <div class="res-title" id="gr-title">Sehr gut!</div>
+    <div class="res-sub" id="gr-sub"></div>
+    <div class="ring-wrap">
+      <svg class="ring" viewBox="0 0 110 110" width="110" height="110">
+        <circle class="ring-bg" cx="55" cy="55" r="46"/>
+        <circle class="ring-fg" id="gr-ring" cx="55" cy="55" r="46"
+          stroke-dasharray="289" stroke-dashoffset="289"/>
+      </svg>
+      <div class="ring-lbl"><div class="ring-pct" id="gr-pct">0%</div><div class="ring-txt">Score</div></div>
+    </div>
+    <div class="res-list" id="gr-list"></div>
+    <button class="btn btn-gold" onclick="App.goHome()">Back to Home</button>
+    <button class="btn btn-ghost" onclick="App.startGrammar()">Practice Again ↺</button>
+  </div>
+</div>
+
+<!-- VOCAB LOADING -->
+<div id="s-vload" class="screen">
+  <div class="load-wrap"><div class="loader"></div>
+    <div class="load-msg">Loading 30 new vocabulary words…</div>
+    <div class="load-phrase" id="v-phrase">Los geht's! 🚀</div>
+  </div>
+</div>
+
+<!-- ARTIKEL GAME -->
+<div id="s-vgame" class="screen">
+  <div class="pbar-row">
+    <div class="pbar-track"><div class="pbar-fill" id="v-pbar" style="width:0%"></div></div>
+    <div class="pbar-lbl" id="v-plbl">1/30</div>
+  </div>
+  <div class="art-sbar">
+    <span id="v-theme" style="color:var(--gold);font-size:.8rem;font-weight:600"></span>
+    <span>✅ <span style="color:var(--ok);font-weight:600" id="v-sc">0</span> correct</span>
+  </div>
+  <div id="v-body"></div>
+</div>
+
+<!-- VOCAB RESULTS -->
+<div id="s-vres" class="screen">
+  <div class="res-wrap">
+    <div class="res-icon" id="vr-icon">📚</div>
+    <div class="res-title" id="vr-title">Well done!</div>
+    <div class="res-sub" id="vr-sub"></div>
+    <div class="ring-wrap">
+      <svg class="ring" viewBox="0 0 110 110" width="110" height="110">
+        <circle class="ring-bg" cx="55" cy="55" r="46"/>
+        <circle class="ring-fg" id="vr-ring" cx="55" cy="55" r="46"
+          stroke-dasharray="289" stroke-dashoffset="289"/>
+      </svg>
+      <div class="ring-lbl"><div class="ring-pct" id="vr-pct">0%</div><div class="ring-txt">Score</div></div>
+    </div>
+    <div class="vsummary">
+      <div class="vs-hd">
+        <span class="vs-t">Today's 30 Words</span>
+        <span class="vs-s" id="vr-cnt"></span>
+      </div>
+      <div class="vs-words" id="vr-words"></div>
+    </div>
+    <button class="btn btn-gold" onclick="App.startWriting()">✍️ Writing Task →</button>
+    <button class="btn btn-ghost" onclick="App.goHome()">Back to Home</button>
+  </div>
+</div>
+
+<!-- WRITING TASK -->
+<div id="s-write" class="screen">
+  <div class="sec-title">✍️ Schreibaufgabe</div>
+  <div class="task-card">
+    <div class="task-lbl">Writing Task</div>
+    <div class="task-txt" id="w-task"></div>
+  </div>
+  <div style="font-size:.8rem;color:var(--dim);margin-bottom:6px">Use at least 6 of these words:</div>
+  <div class="whints" id="w-hints"></div>
+  <textarea class="write-area" id="w-area"
+    placeholder="Schreib hier auf Deutsch…"
+    oninput="updateWC()"></textarea>
+  <div class="write-meta">
+    <span>Aim for 6–10 sentences</span>
+    <span><span class="wc-n" id="w-cnt">0</span> words</span>
+  </div>
+  <button class="btn btn-gold" onclick="App.submitWriting()">Submit for Feedback →</button>
+  <button class="btn btn-ghost" onclick="App.goHome()">Skip for now</button>
+</div>
+
+<!-- WRITING FEEDBACK LOADING -->
+<div id="s-wload" class="screen">
+  <div class="load-wrap"><div class="loader"></div>
+    <div class="load-msg">Analysing your writing…</div>
+    <div class="load-phrase">Moment bitte… ☕</div>
+  </div>
+</div>
+
+<!-- WRITING FEEDBACK -->
+<div id="s-wfeed" class="screen">
+  <div class="sec-title" style="margin-bottom:14px">📝 Feedback</div>
+  <div class="fsec" style="text-align:center;margin-bottom:12px">
+    <div class="score-big" id="wf-score">—</div>
+    <div style="color:var(--dim);font-size:.84rem">Writing Score</div>
+  </div>
+  <div class="fsec">
+    <div class="fhd">Overall Feedback</div>
+    <div style="font-size:.93rem;line-height:1.6" id="wf-overall"></div>
+  </div>
+  <div class="fsec" id="wf-cw">
+    <div class="fhd">Grammar Corrections</div>
+    <div id="wf-corrs"></div>
+  </div>
+  <div class="fsec">
+    <div class="fhd">Vocabulary Used</div>
+    <div id="wf-vocab" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+  </div>
+  <div class="fsec">
+    <div class="fhd">Corrected Version</div>
+    <div class="corr-txt" id="wf-ctxt"></div>
+  </div>
+  <button class="btn btn-gold" style="margin-top:4px" onclick="App.goHome()">Back to Home 🏠</button>
+  <button class="btn btn-ghost" onclick="App.startWriting()">Rewrite ↺</button>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+const API="/api/generate";
+// ── CREDENTIALS (5 users) ──
+const USERS={
+  "harsh":    "DeutschGuru1",
+  "chemnitz": "TULernen25",
+  "vocab99":  "Wortschatz7",
+  "student1": "Sprechen42",
+  "admin5":   "Grammatik99"
+};
+
+// ── LOGIN ──
+function doLogin(){
+  const u=(document.getElementById("login-user")?.value||"").trim().toLowerCase();
+  const p=(document.getElementById("login-pass")?.value||"").trim();
+  if(USERS[u]&&USERS[u]===p){
+    sessionStorage.setItem("du_auth","1");
+    document.getElementById("login-err").style.display="none";
+    SS("s-home"); init();
+  }else{
+    document.getElementById("login-err").style.display="block";
+    document.getElementById("login-pass").value="";
+    document.getElementById("login-pass").focus();
+  }
+}
+function checkAuth(){
+  if(sessionStorage.getItem("du_auth")!=="1"){SS("s-login");return false;}
+  return true;
+}
+
+// ── QUESTION CACHE (save API credits) ──
+function getCached(key){
+  try{
+    const d=localStorage.getItem("qc_"+key);
+    if(!d)return null;
+    const o=JSON.parse(d);
+    if(o.date===new Date().toDateString())return o.data;
+    return null;
+  }catch(e){return null;}
+}
+function setCache(key,data){
+  try{localStorage.setItem("qc_"+key,JSON.stringify({date:new Date().toDateString(),data}));}catch(e){}
+}
+
+// ── TOKEN USAGE TRACKER ──
+let todayTokens=0;
+function trackTokens(est){
+  todayTokens+=est;
+  const k="tokens_"+new Date().toDateString();
+  const cur=parseInt(localStorage.getItem(k)||"0");
+  localStorage.setItem(k, cur+est);
+}
+
+const GRAMMAR_TOPICS=[
+  {name:"Present Tense",focus:"regular verbs (lernen,spielen,machen) and irregular verbs (sein,haben,gehen,fahren,essen) in all persons"},
+  {name:"Articles der/die/das",focus:"definite articles (der/die/das), indefinite articles (ein/eine/ein), grammatical gender of common nouns"},
+  {name:"Plural Forms",focus:"noun plurals (-e,-er,-en,-s endings), umlaut changes, articles in plural"},
+  {name:"Accusative Case",focus:"accusative articles (den/die/das,einen/eine/ein), direct objects, prepositions durch,für,gegen,ohne,um"},
+  {name:"Dative Case",focus:"dative articles (dem/der/dem,einem/einer/einem), indirect objects, prepositions mit,nach,bei,seit,von,zu,aus"},
+  {name:"Perfekt Tense",focus:"haben/sein + Partizip II, regular (ge+stem+t) and key irregular participles"},
+  {name:"Modal Verbs",focus:"können,müssen,wollen,sollen,dürfen,möchten – conjugation and sentence structure"},
+  {name:"Subordinate Clauses",focus:"verb-final word order with weil,dass,wenn,ob"},
+  {name:"Adjective Endings",focus:"predicative and attributive adjective endings with definite/indefinite articles"},
+  {name:"Mixed A2 Review",focus:"mixed A2: all cases, Präsens+Perfekt, modals, subordinate clauses, adjective endings"},
+  {name:"Konjunktiv II",focus:"würde+infinitiv, hätte/wäre – polite requests and hypothetical situations"},
+  {name:"Passiv",focus:"werden+Partizip II in present (Präsens Passiv) and simple past"},
+  {name:"Relativsätze",focus:"relative clauses with der/die/das in nominative and accusative"},
+  {name:"Genitiv",focus:"genitive case: des/der, possessive constructions, prepositions wegen,während,trotz"},
+  {name:"Mixed B1 Review",focus:"mixed B1: Konjunktiv II, Passiv, Relativsätze, Genitiv, complex structures"}
+];
+const VOCAB_THEMES=[
+  {name:"Essen & Trinken",en:"Food & Drinks",level:"A2"},
+  {name:"Familie & Zuhause",en:"Family & Home",level:"A2"},
+  {name:"Kleidung & Einkaufen",en:"Clothes & Shopping",level:"A2"},
+  {name:"Verkehr & Reisen",en:"Transport & Travel",level:"A2"},
+  {name:"Körper & Gesundheit",en:"Body & Health",level:"A2"},
+  {name:"Schule & Beruf",en:"School & Work",level:"A2"},
+  {name:"Freizeit & Hobbys",en:"Hobbies & Leisure",level:"A2"},
+  {name:"Stadt & Orte",en:"City & Places",level:"A2"},
+  {name:"Wetter & Natur",en:"Weather & Nature",level:"A2"},
+  {name:"Alltag & Routine",en:"Daily Routine",level:"A2"},
+  {name:"Technologie & Medien",en:"Technology & Media",level:"A2-B1"},
+  {name:"Gefühle & Charakter",en:"Emotions & Personality",level:"A2-B1"},
+  {name:"Kochen & Rezepte",en:"Cooking & Recipes",level:"A2-B1"},
+  {name:"Sport & Fitness",en:"Sports & Fitness",level:"A2-B1"},
+  {name:"Umwelt & Tiere",en:"Environment & Animals",level:"A2-B1"},
+  {name:"Arbeit & Karriere",en:"Work & Career",level:"B1"},
+  {name:"Reisen & Kultur",en:"Travel & Culture",level:"B1"},
+  {name:"Bildung & Lernen",en:"Education",level:"B1"},
+  {name:"Gesellschaft & Politik",en:"Society & Politics",level:"B1"},
+  {name:"Kunst & Kultur",en:"Arts & Culture",level:"B1"}
+];
+const PHRASES=["Viel Erfolg! 🍀","Du schaffst das! 💪","Weiter so! ⭐","Los geht's! 🚀","Gib alles! 🔥"];
+const TOASTS=["Richtig! 🎯","Super! 🌟","Weiter so! ✨","Stark! 💪","Prima! 🎉"];
+let S={dayCount:1,streak:0,lastVisit:null,history:[]};
+let G={},V={},W={};
+function loadS(){try{const d=localStorage.getItem("du_v4");if(d)S={...S,...JSON.parse(d)};}catch(e){}}
+function saveS(){try{localStorage.setItem("du_v4",JSON.stringify(S));}catch(e){}}
+function gTopicIdx(){return Math.min(Math.floor((S.dayCount-1)/3),GRAMMAR_TOPICS.length-1);}
+function vThemeIdx(){return Math.min(Math.floor((S.dayCount-1)/3),VOCAB_THEMES.length-1);}
+function diff(){return Math.min(10,Math.ceil(S.dayCount/2));}
+function stars(d){const f=Math.ceil(d/2);return"★".repeat(f)+"☆".repeat(5-f);}
+function lvlLbl(){const d=S.dayCount;return d<=30?"A2":d<=60?"A2-B1":"B1";}
+function SS(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");window.scrollTo(0,0);}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");
+  setTimeout(()=>t.classList.remove("on"),2000);}
+function showError(m){document.getElementById("err-msg").textContent=m;
+  document.getElementById("err-panel").style.display="block";}
+function hideError(){document.getElementById("err-panel").style.display="none";}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function norm(s){return s.trim().toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe")
+  .replace(/ü/g,"ue").replace(/ß/g,"ss");}
+function match(u,c){return u.toLowerCase().trim()===c.toLowerCase().trim()||norm(u)===norm(c);}
+function xJSON(raw){
+  const c=raw.replace(/```json|```/g,"").trim();
+  const s=c.indexOf("{"),e=c.lastIndexOf("}");
+  if(s<0||e<0)throw new Error("No JSON in response");
+  return JSON.parse(c.slice(s,e+1));
+}
+async function callAPI(prompt,max_tokens){
+  const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({prompt,max_tokens:max_tokens||2048})});
+  if(!r.ok){let m=`HTTP ${r.status}`;try{const e=await r.json();m=e.error||m;}catch(_){}throw new Error(m);}
+  const d=await r.json();if(d.error)throw new Error(d.error);
+  return d.choices?.[0]?.message?.content||"";
+}
+function init(){
+  // Check if called from login or page load
+  if(!sessionStorage.getItem("du_auth")){SS("s-login");return;}
+  loadS();
+  const today=new Date().toDateString();
+  if(S.lastVisit!==today){
+    const yest=new Date(Date.now()-86400000).toDateString();
+    S.streak=S.lastVisit===yest?S.streak+1:1;
+    if(S.lastVisit&&S.lastVisit!==today)S.dayCount++;
+    S.lastVisit=today;saveS();
+  }
+  renderHome();
+}
+function renderHome(){
+  const gt=GRAMMAR_TOPICS[gTopicIdx()];
+  const vt=VOCAB_THEMES[vThemeIdx()];
+  document.getElementById("h-day").textContent=S.dayCount;
+  document.getElementById("h-streak").textContent="🔥"+S.streak;
+  document.getElementById("h-lvl").textContent=lvlLbl();
+  document.getElementById("h-gtopic").textContent=gt.name;
+  document.getElementById("h-gdiff").textContent=stars(diff())+" Difficulty";
+  document.getElementById("h-vtheme").textContent=vt.en+" · "+vt.level;
+  document.getElementById("h-vlvl").textContent="20 Wörter";
+  const tk=localStorage.getItem("tokens_"+new Date().toDateString())||"0";
+  const tel=document.getElementById("token-info");
+  if(tel)tel.textContent=`Today: ~${parseInt(tk).toLocaleString()} tokens used`;
+}
+/* ─── GRAMMAR ─── */
+// ── TIMER ──
+let gTimer=null,gTimerSecs=25*60;
+function startGTimer(){
+  gTimerSecs=25*60; clearInterval(gTimer);
+  gTimer=setInterval(()=>{
+    gTimerSecs--;
+    const m=Math.floor(gTimerSecs/60),s=gTimerSecs%60;
+    const el=document.getElementById("g-timer");
+    if(el){el.textContent=`${m}:${s.toString().padStart(2,"0")}`;
+      el.className="timer-val"+(gTimerSecs<=120?" danger":gTimerSecs<=300?" warn":"");}
+    if(gTimerSecs<=0){clearInterval(gTimer);showGRes();}
+  },1000);
+}
+function stopGTimer(){clearInterval(gTimer);}
+
+async function startGrammar(){
+  SS("s-gload");
+  document.getElementById("g-phrase").textContent=PHRASES[Math.floor(Math.random()*PHRASES.length)];
+  const t=GRAMMAR_TOPICS[gTopicIdx()],d=diff();
+  const dl=d<=3?"sehr einfach":d<=5?"einfaches A2":d<=7?"solides A2":d<=9?"oberes A2":"A2-B1";
+  // ── USE CACHE if same day ──
+  const cacheKey=`g_${S.dayCount}_${gTopicIdx()}`;
+  const cached=getCached(cacheKey);
+  if(cached){
+    G={qs:cached,cur:0,score:0,results:[],answered:false};
+    SS("s-act"); startGTimer(); renderGQ(); return;
+  }
+  // Short prompt = fewer tokens
+  const prompt=`DaF A2-B1 teacher. 15 exercises on: ${t.name} (${t.focus}). Level ${d}/10.
+Order: flashcard,mcq,fill_blank,perfekt_gap,mcq,reorder,fill_blank,error_correction,mcq,fill_blank,matching,reorder,fill_blank,error_correction,mcq
+Formats:
+flashcard:{"type":"flashcard","front":"..","back":"explanation+example","topic":".."}
+mcq:{"type":"mcq","question":"..","options":["a","b","c","d"],"answer":"exact","explanation":".."}
+fill_blank:{"type":"fill_blank","question":"sentence with ___","hint":"(inf)","answer":"word","explanation":".."}
+perfekt_gap:{"type":"perfekt_gap","instruction":"Ergänzen Sie haben/sein+Partizip II","sentences":[{"text":"___ nach Berlin ___ (fahren).","aux":"ist","participle":"gefahren","verb_hint":"fahren"},{"text":"Er ___ Kaffee ___ (trinken).","aux":"hat","participle":"getrunken","verb_hint":"trinken"},{"text":"Sie ___ früh ___ (aufstehen).","aux":"ist","participle":"aufgestanden","verb_hint":"aufstehen"}]}
+reorder:{"type":"reorder","instruction":"Richtige Reihenfolge?","words":["w1","w2","w3","w4"],"correct":"w1 w2 w3 w4","hint":"tip","explanation":".."}
+error_correction:{"type":"error_correction","instruction":"Fehler korrigieren","wrong":"wrong sentence","correct":"right sentence","error_type":"type","explanation":".."}
+matching:{"type":"matching","instruction":"Paare verbinden","category":"Infinitiv→Partizip II","pairs":[{"left":"gehen","right":"gegangen"},{"left":"essen","right":"gegessen"},{"left":"sehen","right":"gesehen"},{"left":"trinken","right":"getrunken"}]}
+JSON only: {"questions":[...15...]}`;
+  try{
+    const raw=await callAPI(prompt,2000);
+    trackTokens(2800);
+    const p=xJSON(raw);
+    if(!p.questions?.length)throw new Error("Keine Aufgaben erhalten");
+    setCache(cacheKey, p.questions); // save for today
+    G={qs:p.questions,cur:0,score:0,results:[],answered:false};
+    SS("s-act"); startGTimer(); renderGQ();
+  }catch(e){SS("s-home");showError(e.message);console.error(e);}
+}
+
+function renderGQ(){
+  const q=G.qs[G.cur],tot=G.qs.length;
+  G.answered=false;
+  document.getElementById("g-pbar").style.width=`${(G.cur/tot)*100}%`;
+  document.getElementById("g-plbl").textContent=`${G.cur+1}/${tot}`;
+  const b=document.getElementById("g-body");
+  if(q.type==="flashcard")        b.innerHTML=tFC(q);
+  else if(q.type==="mcq")         b.innerHTML=tMCQ(q);
+  else if(q.type==="fill_blank")  b.innerHTML=tFILL(q);
+  else if(q.type==="perfekt_gap") b.innerHTML=tPFK(q);
+  else if(q.type==="reorder")     b.innerHTML=tREO(q);
+  else if(q.type==="error_correction") b.innerHTML=tERR(q);
+  else if(q.type==="matching")    b.innerHTML=tMATCH(q);
+  else b.innerHTML=tFILL(q); // fallback
+  b.style.animation="none";void b.offsetHeight;b.style.animation="rise .3s ease";
+  if(q.type==="fill_blank"||q.type==="error_correction")
+    setTimeout(()=>document.getElementById("fi")?.focus(),100);
+}
+function tFC(q){return`<span class="chip chip-fc">📚 Flashcard · ${esc(q.topic||"")}</span>
+<div class="fc-wrap" onclick="flipFC()"><div class="fc-in" id="fc">
+  <div class="fc-face"><div class="fc-front">${esc(q.front)}</div><div class="fc-tap">Tap to flip →</div></div>
+  <div class="fc-face fc-back"><div class="fc-rear">${esc(q.back)}</div></div>
+</div></div>
+<div class="fc-btns">
+  <button class="kbtn kbtn-y" onclick="fcDone(true)">✓ Got it!</button>
+  <button class="kbtn kbtn-n" onclick="fcDone(false)">✗ Review again</button>
+</div>`;}
+function flipFC(){document.getElementById("fc")?.classList.toggle("flipped");}
+function fcDone(k){
+  G.results.push({q:G.qs[G.cur].front,correct:k,ans:G.qs[G.cur].front});
+  if(k){G.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
+  gNext();
+}
+function tMCQ(q){return`<span class="chip chip-mc">❓ Multiple Choice</span>
+<div class="qcard"><div class="qtext">${esc(q.question)}</div></div>
+<div class="opts">${q.options.map((o,i)=>`<button class="obtn" id="go${i}" onclick="checkMCQ(${i})">${esc(o)}</button>`).join("")}</div>
+<div class="fb" id="gfb"></div>
+<button class="nxtbtn" id="gnxt" onclick="gNext()">Next →</button>`;}
+function checkMCQ(i){
+  if(G.answered)return;G.answered=true;
+  const q=G.qs[G.cur],ok=q.options[i]===q.answer;
+  q.options.forEach((o,j)=>{const b=document.getElementById(`go${j}`);b.disabled=true;
+    if(o===q.answer)b.classList.add("cor");else if(j===i)b.classList.add("wrg");});
+  if(ok){G.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
+  gFB(ok,q.explanation,q.answer);
+  G.results.push({q:q.question,correct:ok,ans:q.answer});
+  document.getElementById("gnxt").classList.add("show");
+}
+function tFILL(q){return`<span class="chip chip-fb">✏️ Fill in the Blank</span>
+<div class="qcard"><div class="qtext">${esc(q.question)}</div><div class="qhint">${esc(q.hint||"")}</div></div>
+<div class="fill-row">
+  <input class="fill-in" id="fi" type="text" placeholder="Your answer…"
+    autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill()">
+  <button class="chk-btn" onclick="checkFill()">Check</button>
+</div>
+<div style="margin-bottom:10px"><button class="hint-btn" onclick="tgHint()">Show hint</button>
+  <span id="htxt" style="display:none;color:var(--dim);font-size:.8rem;margin-left:8px"></span></div>
+<div class="fb" id="gfb"></div>
+<button class="nxtbtn" id="gnxt" onclick="gNext()">Next →</button>`;}
+function tgHint(){const q=G.qs[G.cur];const s=document.getElementById("htxt");
+  s.style.display=s.style.display==="none"?(s.textContent=q.hint||"No hint","inline"):"none";}
+function checkFill(){
+  if(G.answered)return;
+  const fi=document.getElementById("fi");if(!fi||!fi.value.trim()){fi?.focus();return;}
+  G.answered=true;
+  const q=G.qs[G.cur],ok=match(fi.value,q.answer);
+  fi.disabled=true;fi.classList.add(ok?"cor":"wrg");
+  if(ok){G.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
+  gFB(ok,q.explanation,q.answer);
+  G.results.push({q:q.question,correct:ok,ans:q.answer});
+  document.getElementById("gnxt").classList.add("show");
+}
+function gFB(ok,exp,ans){
+  const fb=document.getElementById("gfb");if(!fb)return;
+  fb.className=`fb show ${ok?"fb-ok":"fb-err"}`;
+  fb.innerHTML=`<div class="fb-hd"><span>${ok?"✅":"❌"}</span>
+    <span>${ok?"Richtig!":`Falsch — correct: <strong>${esc(ans)}</strong>`}</span></div>
+    ${exp?`<div class="fb-ex">${esc(exp)}</div>`:""}`;
+}
+function gNext(){G.cur++;if(G.cur>=G.qs.length){stopGTimer();showGRes();}else renderGQ();}
+// ── PERFEKT GAP ──
+function tPFK(q){
+  const rows=q.sentences.map((s,i)=>`
+<tr>
+  <td style="color:var(--dim);font-size:.8rem">${i+1}.</td>
+  <td>
+    <div class="pfk-sent">${esc(s.text.split("___")[0])}
+      <select class="pfk-sel" id="pfk-aux-${i}">
+        <option value="">—</option>
+        <option value="hat">hat</option>
+        <option value="ist">ist</option>
+      </select>
+      ${s.text.split("___").length>2 ? esc(s.text.split("___")[1]) : ""}
+      <input class="pfk-in" id="pfk-part-${i}" type="text" placeholder="Partizip II…"
+        autocomplete="off" autocorrect="off" spellcheck="false"
+        onkeydown="if(event.key==='Enter')checkPFK()">
+      ${s.text.split("___").length>2 ? esc(s.text.split("___")[2]||"") : esc(s.text.split("___")[1]||"")}
+    </div>
+    <div class="pfk-hint">${esc(s.verb_hint||"")}</div>
+  </td>
+</tr>`).join("");
+  return`<span class="chip chip-fb">✏️ Perfekt — haben oder sein?</span>
+<div class="qcard"><div style="font-size:.85rem;color:var(--dim);margin-bottom:10px">${esc(q.instruction||"")}</div>
+  <table class="pfk-table">${rows}</table>
+</div>
+<button class="pfk-submit" onclick="checkPFK()">Überprüfen ✓</button>
+<div class="fb" id="gfb" style="margin-top:12px"></div>
+<button class="nxtbtn" id="gnxt" onclick="gNext()">Weiter →</button>`;}
+
+function checkPFK(){
+  if(G.answered)return; G.answered=true;
+  const q=G.qs[G.cur]; let allOk=true; let fb="";
+  q.sentences.forEach((s,i)=>{
+    const auxEl=document.getElementById(`pfk-aux-${i}`);
+    const partEl=document.getElementById(`pfk-in-${i}`) || document.getElementById(`pfk-part-${i}`);
+    if(!auxEl||!partEl)return;
+    auxEl.disabled=true; partEl.disabled=true;
+    const auxOk=auxEl.value===s.aux;
+    const partOk=norm(partEl.value)===norm(s.participle)||partEl.value.toLowerCase().trim()===s.participle.toLowerCase().trim();
+    auxEl.className="pfk-sel "+(auxOk?"ok":"er");
+    partEl.className="pfk-in "+(partOk?"ok":"er");
+    if(!auxOk||!partOk){allOk=false;
+      fb+=`<div style="font-size:.82rem;margin-top:4px">${i+1}. ${esc(s.aux)} ${esc(s.participle)} ✓${!auxOk?" ("+esc(s.aux)+")":""}${!partOk?" ("+esc(s.participle)+")":""}</div>`;}
+  });
+  const fbEl=document.getElementById("gfb");
+  if(fbEl){fbEl.className=`fb show ${allOk?"fb-ok":"fb-err"}`;
+    fbEl.innerHTML=allOk?`<div class="fb-hd">✅ Alles richtig! Perfekt!</div>`:
+      `<div class="fb-hd">❌ Korrekte Antworten:</div>${fb}`;}
+  if(allOk){G.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
+  G.results.push({q:q.instruction||"Perfekt Gap",correct:allOk,ans:"hat/ist + Partizip II"});
+  document.getElementById("gnxt").classList.add("show");
+}
+
+// ── REORDER ──
+let _pool=[], _ans=[];
+function tREO(q){
+  _pool=[...q.words].sort(()=>Math.random()-.5);
+  _ans=[];
+  const poolHtml=_pool.map((w,i)=>`<span class="word-chip-r chip-pool" id="rp${i}" onclick="rpClick(${i})">${esc(w)}</span>`).join("");
+  return`<span class="chip chip-mc">🔀 Satzstellung</span>
+<div class="qcard">
+  <div class="qtext" style="margin-bottom:8px">${esc(q.instruction||"Richtige Reihenfolge?")}</div>
+  <div style="font-size:.8rem;color:var(--gold);margin-bottom:10px">💡 ${esc(q.hint||"")}</div>
+</div>
+<div class="reorder-label">Verfügbare Wörter:</div>
+<div class="reorder-pool" id="reo-pool">${poolHtml}</div>
+<div class="reorder-label">Ihr Satz:</div>
+<div class="reorder-ans" id="reo-ans" style="min-height:50px"></div>
+<div style="display:flex;gap:8px;margin-bottom:12px">
+  <button class="pfk-submit" onclick="checkREO()">Prüfen ✓</button>
+  <button onclick="resetREO()" style="padding:10px 16px;background:transparent;color:var(--dim);
+    border:1px solid var(--bd);border-radius:var(--rs);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.9rem">Zurücksetzen</button>
+</div>
+<div class="fb" id="gfb"></div>
+<button class="nxtbtn" id="gnxt" onclick="gNext()">Weiter →</button>`;}
+
+function rpClick(i){
+  if(G.answered)return;
+  const w=_pool[i]; if(!w)return;
+  _ans.push({word:w,poolIdx:i});
+  _pool[i]=null;
+  document.getElementById(`rp${i}`).style.display="none";
+  const ansDiv=document.getElementById("reo-ans");
+  const chip=document.createElement("span");
+  chip.className="word-chip-r chip-ans";
+  chip.textContent=w;
+  chip.dataset.poolIdx=i;
+  chip.onclick=()=>{
+    if(G.answered)return;
+    const pi=parseInt(chip.dataset.poolIdx);
+    _pool[pi]=w; _ans=_ans.filter(a=>a.poolIdx!==pi);
+    document.getElementById(`rp${pi}`).style.display="";
+    chip.remove();
+  };
+  ansDiv.appendChild(chip);
+}
+function resetREO(){
+  if(G.answered)return;
+  const q=G.qs[G.cur];
+  _pool=[...q.words].sort(()=>Math.random()-.5); _ans=[];
+  const poolDiv=document.getElementById("reo-pool");
+  if(poolDiv)poolDiv.innerHTML=_pool.map((w,i)=>`<span class="word-chip-r chip-pool" id="rp${i}" onclick="rpClick(${i})">${esc(w)}</span>`).join("");
+  const ansDiv=document.getElementById("reo-ans");
+  if(ansDiv)ansDiv.innerHTML="";
+}
+function checkREO(){
+  if(G.answered)return; G.answered=true;
+  const q=G.qs[G.cur];
+  const userSent=_ans.map(a=>a.word).join(" ").trim().toLowerCase();
+  const correct=q.correct.trim().toLowerCase();
+  const ok=userSent===correct||userSent===correct+".";
+  const fb=document.getElementById("gfb");
+  if(fb){fb.className=`fb show ${ok?"fb-ok":"fb-err"}`;
+    fb.innerHTML=ok?`<div class="fb-hd">✅ Richtig!</div>`:
+      `<div class="fb-hd">❌ Korrekt: <strong>${esc(q.correct)}</strong></div><div class="fb-ex">${esc(q.explanation||"")}</div>`;}
+  if(ok){G.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
+  G.results.push({q:q.instruction||"Reorder",correct:ok,ans:q.correct});
+  document.getElementById("gnxt").classList.add("show");
+}
+
+// ── ERROR CORRECTION ──
+function tERR(q){return`<span class="chip chip-fc">🔍 Fehlerkorrektur</span>
+<div class="qcard">
+  <div style="font-size:.75rem;color:var(--dim);margin-bottom:8px">${esc(q.instruction||"")}</div>
+  <span class="errtype">⚠️ ${esc(q.error_type||"Grammatikfehler")}</span>
+  <div class="wrong-sent" style="margin-top:10px">${esc(q.wrong)}</div>
+</div>
+<div class="fill-row">
+  <input class="fill-in" id="fi" type="text" placeholder="Korrekte Version…"
+    autocomplete="off" autocorrect="off" spellcheck="false"
+    onkeydown="if(event.key==='Enter')checkERR()" style="font-size:.95rem">
+  <button class="chk-btn" onclick="checkERR()">Prüfen</button>
+</div>
+<div class="fb" id="gfb"></div>
+<button class="nxtbtn" id="gnxt" onclick="gNext()">Weiter →</button>`;}
+
+function checkERR(){
+  if(G.answered)return;
+  const fi=document.getElementById("fi"); if(!fi||!fi.value.trim()){fi?.focus();return;}
+  G.answered=true;
+  const q=G.qs[G.cur];
+  const ok=fi.value.toLowerCase().trim()===q.correct.toLowerCase().trim()||
+            norm(fi.value)===norm(q.correct);
+  fi.disabled=true; fi.classList.add(ok?"cor":"wrg");
+  const fb=document.getElementById("gfb");
+  if(fb){fb.className=`fb show ${ok?"fb-ok":"fb-err"}`;
+    fb.innerHTML=ok?`<div class="fb-hd">✅ Richtig!</div>`:
+      `<div class="fb-hd">❌ Korrekt: <strong>${esc(q.correct)}</strong></div><div class="fb-ex">${esc(q.explanation||"")}</div>`;}
+  if(ok){G.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
+  G.results.push({q:q.wrong,correct:ok,ans:q.correct});
+  document.getElementById("gnxt").classList.add("show");
+}
+
+// ── MATCHING ──
+let _mSel=null,_mMatched=0;
+function tMATCH(q){
+  const shuffledRight=[...q.pairs].sort(()=>Math.random()-.5).map(p=>p.right);
+  const leftHtml=q.pairs.map((p,i)=>`<div class="match-item" id="ml${i}" onclick="mLeft(${i})">${esc(p.left)}</div>`).join("");
+  const rightHtml=shuffledRight.map((r,i)=>`<div class="match-item" id="mr${i}" onclick="mRight(${i})" data-val="${esc(r)}">${esc(r)}</div>`).join("");
+  window._mPairs=q.pairs; window._mRight=shuffledRight; _mSel=null; _mMatched=0;
+  return`<span class="chip chip-mc">🔗 Zuordnung</span>
+<div class="qcard">
+  <div style="font-size:.75rem;color:var(--dim);margin-bottom:6px">${esc(q.instruction||"")}</div>
+  <div style="font-size:.8rem;color:var(--gold);margin-bottom:10px">📌 ${esc(q.category||"")}</div>
+  <div class="match-progress" id="m-prog">0 / ${q.pairs.length} verbunden</div>
+  <div class="match-grid">
+    <div class="match-col" id="ml-col">${leftHtml}</div>
+    <div class="match-col" id="mr-col">${rightHtml}</div>
+  </div>
+</div>
+<div class="fb" id="gfb"></div>
+<button class="nxtbtn" id="gnxt" onclick="gNext()">Weiter →</button>`;}
+
+function mLeft(i){
+  if(G.answered)return;
+  const el=document.getElementById(`ml${i}`);
+  if(!el||el.classList.contains("matched"))return;
+  document.querySelectorAll(".match-item").forEach(e=>e.classList.remove("selected"));
+  el.classList.add("selected");
+  _mSel={side:"L",idx:i};
+}
+function mRight(i){
+  if(G.answered)return;
+  const el=document.getElementById(`mr${i}`);
+  if(!el||el.classList.contains("matched"))return;
+  if(_mSel&&_mSel.side==="L"){
+    const leftPair=window._mPairs[_mSel.idx];
+    const rightVal=window._mRight[i];
+    const ok=leftPair.right===rightVal;
+    const lEl=document.getElementById(`ml${_mSel.idx}`);
+    if(ok){
+      lEl.classList.add("matched"); lEl.classList.remove("selected");
+      el.classList.add("matched");
+      _mMatched++;
+      const prog=document.getElementById("m-prog");
+      if(prog)prog.textContent=`${_mMatched} / ${window._mPairs.length} verbunden`;
+      toast("✓ Richtig!");
+      if(_mMatched===window._mPairs.length){
+        G.answered=true; G.score++;
+        const fb=document.getElementById("gfb");
+        if(fb){fb.className="fb show fb-ok";fb.innerHTML='<div class="fb-hd">✅ Alle Paare gefunden! Ausgezeichnet!</div>';}
+        G.results.push({q:window._mPairs.map(p=>p.left).join(", "),correct:true,ans:"alle Paare"});
+        document.getElementById("gnxt").classList.add("show");
+      }
+    }else{
+      lEl.classList.add("wrong-match"); el.classList.add("wrong-match");
+      setTimeout(()=>{lEl.classList.remove("wrong-match","selected");el.classList.remove("wrong-match");},600);
+    }
+    _mSel=null;
+  }else{
+    document.querySelectorAll(".match-item").forEach(e=>e.classList.remove("selected"));
+    el.classList.add("selected");
+    _mSel={side:"R",idx:i};
+  }
+}
+
+function showGRes(){
+  const tot=G.qs.length,pct=Math.round(G.score/tot*100);
+  const [ic,ti]=pct>=80?["🏆","Ausgezeichnet!"]:pct>=60?["⭐","Sehr gut!"]:pct>=40?["👍","Gut gemacht!"]:["📚","Weiter üben!"];
+  S.history.unshift({type:"grammar",day:S.dayCount,pct,topic:GRAMMAR_TOPICS[gTopicIdx()].name,date:new Date().toLocaleDateString()});
+  if(S.history.length>30)S.history.pop();saveS();
+  document.getElementById("gr-icon").textContent=ic;
+  document.getElementById("gr-title").textContent=ti;
+  document.getElementById("gr-sub").innerHTML=`<strong>${G.score}/${tot}</strong> correct · ${pct}%`;
+  document.getElementById("gr-pct").textContent=`${pct}%`;
+  const c=2*Math.PI*46;
+  setTimeout(()=>{document.getElementById("gr-ring").style.strokeDashoffset=c-(pct/100)*c;},100);
+  document.getElementById("gr-list").innerHTML=G.results.map(r=>`
+<div class="res-row"><span>${r.correct?"✅":"❌"}</span>
+  <div><div style="color:var(--dim);font-size:.82rem">${esc(r.q.length>55?r.q.slice(0,55)+"…":r.q)}</div>
+    ${!r.correct?`<div style="font-size:.8rem;color:var(--err)">→ ${esc(r.ans)}</div>`:""}</div></div>`).join("");
+  SS("s-gres");
+}
+/* ─── VOCAB ─── */
+async function startVocab(){
+  SS("s-vload");
+  document.getElementById("v-phrase").textContent=PHRASES[Math.floor(Math.random()*PHRASES.length)];
+  const t=VOCAB_THEMES[vThemeIdx()];
+  const dn=S.dayCount;
+  const vCacheKey=`v_${S.dayCount}_${vThemeIdx()}`;
+  const vCached=getCached(vCacheKey);
+  if(vCached){
+    V={words:vCached.words,theme:vCached.theme,level:vCached.level,task:vCached.task,cur:0,score:0,results:[]};
+    document.getElementById("v-theme").textContent=`${V.theme} · ${V.level}`;
+    SS("s-vgame");renderArtQ();return;
+  }
+  const prompt=`German vocab teacher. Exactly 20 ${t.level} nouns. Theme:${t.name}(${t.en}). Nouns only, with der/die/das, plural, short example.
+JSON:{"theme":"${t.en}","level":"${t.level}","writing_task":"Write 6-8 sentences about ${t.en.toLowerCase()} using 5 of today's words.","words":[{"article":"der","word":"Apfel","plural":"Äpfel","english":"apple","example":"Ich kaufe einen Apfel.","example_english":"I buy an apple."},...20]}`;
+  try{
+    const raw=await callAPI(prompt,1800);
+    trackTokens(2200);
+    const p=xJSON(raw);
+    if(!p.words?.length)throw new Error("No words returned");
+    const vWords=p.words.slice(0,20);
+    const vData={words:vWords,theme:p.theme||t.en,level:p.level||t.level,
+      task:p.writing_task||`Write 6-8 sentences about ${t.en} using at least 5 of today's words.`};
+    setCache(vCacheKey,vData); // cache for today
+    V={...vData,cur:0,score:0,results:[]};
+    document.getElementById("v-theme").textContent=`${V.theme} · ${V.level}`;
+    SS("s-vgame");renderArtQ();
+  }catch(e){SS("s-home");showError(e.message);console.error(e);}
+}
+function renderArtQ(){
+  const w=V.words[V.cur],tot=V.words.length;
+  document.getElementById("v-pbar").style.width=`${(V.cur/tot)*100}%`;
+  document.getElementById("v-plbl").textContent=`${V.cur+1}/${tot}`;
+  document.getElementById("v-sc").textContent=V.score;
+  const b=document.getElementById("v-body");
+  b.innerHTML=`
+<div class="art-card" id="acard">
+  <div class="art-cat">${esc(V.theme)} · ${esc(w.english)}</div>
+  <div class="art-word">${esc(w.word)}</div>
+  <div class="art-plural">Plural: ${esc(w.plural||"—")}</div>
+  <div class="art-reveal" id="arev">
+    <div class="art-ex" id="aex"></div>
+    <div class="art-en">${esc(w.example_english||"")}</div>
+  </div>
+</div>
+<div class="art-btns">
+  <button class="abtn a-der" id="b-der" onclick="checkArt('der')">DER</button>
+  <button class="abtn a-die" id="b-die" onclick="checkArt('die')">DIE</button>
+  <button class="abtn a-das" id="b-das" onclick="checkArt('das')">DAS</button>
+</div>
+<button class="nxtbtn" id="vnxt" onclick="vNext()">Next →</button>`;
+  b.style.animation="none";void b.offsetHeight;b.style.animation="rise .3s ease";
+}
+function checkArt(chosen){
+  const bd=document.getElementById("b-der"),bi=document.getElementById("b-die"),bs=document.getElementById("b-das");
+  if(bd.disabled)return;
+  [bd,bi,bs].forEach(b=>b.disabled=true);
+  const w=V.words[V.cur],ok=chosen===w.article;
+  document.getElementById(`b-${w.article}`).classList.add("a-cor");
+  if(!ok)document.getElementById(`b-${chosen}`).classList.add("a-wrg");
+  ["der","die","das"].forEach(a=>{if(a!==w.article&&a!==chosen)document.getElementById(`b-${a}`).classList.add("a-wrg");});
+  if(ok){V.score++;toast(TOASTS[Math.floor(Math.random()*TOASTS.length)]);}
+  V.results.push({word:w.word,article:w.article,correct:ok});
+  // Build highlighted example
+  const forms={der:["der","Der","ein","Ein","den","Den"],die:["die","Die","eine","Eine"],das:["das","Das","ein","Ein"]};
+  const cls=`hl-${w.article}`;
+  let ex=esc(w.example||"");
+  (forms[w.article]||[]).forEach(f=>{ex=ex.replace(new RegExp(`\b${f}\b`,"g"),`<span class="${cls}">${f}</span>`);});
+  document.getElementById("aex").innerHTML=ex;
+  document.getElementById("arev").classList.add("show");
+  document.getElementById("vnxt").classList.add("show");
+  const card=document.getElementById("acard");
+  card.style.borderColor=ok?"var(--ok)":"var(--err)";
+  setTimeout(()=>{card.style.borderColor="";},1200);
+}
+function vNext(){V.cur++;if(V.cur>=V.words.length)showVRes();else renderArtQ();}
+function showVRes(){
+  const tot=V.results.length,pct=Math.round(V.score/tot*100);
+  const [ic,ti]=pct>=80?["🏆","Ausgezeichnet!"]:pct>=60?["⭐","Sehr gut!"]:pct>=40?["👍","Gut gemacht!"]:["📚","Weiter üben!"];
+  S.history.unshift({type:"vocab",day:S.dayCount,pct,topic:V.theme,date:new Date().toLocaleDateString()});
+  if(S.history.length>30)S.history.pop();saveS();
+  document.getElementById("vr-icon").textContent=ic;
+  document.getElementById("vr-title").textContent=ti;
+  document.getElementById("vr-sub").innerHTML=`<strong>${V.score}/${tot}</strong> articles correct · ${pct}%`;
+  document.getElementById("vr-pct").textContent=`${pct}%`;
+  document.getElementById("vr-cnt").textContent=`${V.score}/${tot} ✓`;
+  const c=2*Math.PI*46;
+  setTimeout(()=>{document.getElementById("vr-ring").style.strokeDashoffset=c-(pct/100)*c;},100);
+  document.getElementById("vr-words").innerHTML=V.results.map((r,i)=>{
+    const w=V.words[i];
+    return`<span class="wchip ${r.correct?"wc-ok":"wc-er"}"><span class="c-${w.article}">${esc(w.article)}</span> ${esc(w.word)}</span>`;
+  }).join("");
+  SS("s-vres");
+}
+/* ─── WRITING ─── */
+function startWriting(){
+  W={task:V.task,words:V.words};
+  document.getElementById("w-task").textContent=W.task;
+  document.getElementById("w-area").value="";
+  document.getElementById("w-cnt").textContent="0";
+  // Sort: wrong answers first, show 14 hints
+  const sorted=[...W.words].sort((a,b)=>{
+    const ra=V.results.find(r=>r.word===a.word),rb=V.results.find(r=>r.word===b.word);
+    return(ra?.correct?1:0)-(rb?.correct?1:0);
+  });
+  document.getElementById("w-hints").innerHTML=sorted.slice(0,14).map(w=>{
+    return`<span class="whip"><span class="c-${w.article}">${esc(w.article)}</span> <strong>${esc(w.word)}</strong> = ${esc(w.english)}</span>`;
+  }).join("");
+  SS("s-write");
+}
+function updateWC(){
+  const v=document.getElementById("w-area").value;
+  document.getElementById("w-cnt").textContent=v.trim().split(/\s+/).filter(x=>x).length;
+}
+async function submitWriting(){
+  const txt=document.getElementById("w-area").value.trim();
+  if(txt.length<30){toast("Please write at least a few sentences first!");return;}
+  SS("s-wload");
+  const wl=W.words.slice(0,10).map(w=>`${w.article} ${w.word}`).join(", ");
+  const prompt=`German A2-B1 teacher. Grade this writing.
+Task:"${W.task.slice(0,100)}" Words:${wl} Student:"${txt.slice(0,400)}"
+JSON:{"score":75,"overall":"2-3 sentences","corrections":[{"original":"..","corrected":"..","explanation":".."}],"vocab_used":[".."],"vocab_missed":[".."],"corrected_text":"full corrected text"}`;
+  try{
+    const raw=await callAPI(prompt,1000);
+    const p=xJSON(raw);
+    renderWFeed(p);
+  }catch(e){SS("s-write");toast("⚠️ "+e.message.slice(0,50));console.error(e);}
+}
+function renderWFeed(f){
+  document.getElementById("wf-score").textContent=`${f.score||0}/100`;
+  document.getElementById("wf-overall").textContent=f.overall||"Good effort!";
+  const corrs=f.corrections||[];
+  const cw=document.getElementById("wf-cw");
+  if(!corrs.length){cw.style.display="none";}else{
+    cw.style.display="";
+    document.getElementById("wf-corrs").innerHTML=corrs.map(c=>`
+<div class="corr-item">
+  <div class="co">✗ ${esc(c.original)}</div>
+  <div class="cf">✓ ${esc(c.corrected)}</div>
+  <div class="ce">💡 ${esc(c.explanation)}</div>
+</div>`).join("");
+  }
+  const used=(f.vocab_used||[]).map(w=>`<span class="wchip wc-ok">✓ ${esc(w)}</span>`).join("");
+  const miss=(f.vocab_missed||[]).map(w=>`<span class="wchip wc-er">○ ${esc(w)}</span>`).join("");
+  document.getElementById("wf-vocab").innerHTML=used+miss||`<span style="color:var(--dim);font-size:.85rem">—</span>`;
+  document.getElementById("wf-ctxt").textContent=f.corrected_text||"";
+  SS("s-wfeed");
+}
+/* ─── HISTORY ─── */
+function toggleHistory(){
+  const el=document.getElementById("h-hist");
+  if(el.style.display==="none"){
+    if(!S.history.length){toast("No sessions yet!");return;}
+    document.getElementById("h-hist-grid").innerHTML=S.history.slice(0,8).map(h=>`
+<div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);padding:11px 13px;font-size:.8rem">
+  <strong style="color:var(--gold);font-size:.95rem">${h.pct}%</strong>
+  <span style="color:var(--dim);font-size:.72rem;margin-left:4px">${h.type||""}</span><br>
+  Day ${h.day} · ${(h.topic||"").split(" ").slice(0,3).join(" ")}<br>
+  <span style="color:var(--dim);font-size:.72rem">${h.date||""}</span>
+</div>`).join("");
+    el.style.display="";
+  }else{el.style.display="none";}
+}
+const App={startGrammar,startVocab,startWriting,submitWriting,goHome:()=>SS("s-home"),toggleHistory};
+init();
+</script>
+</body>
+</html>
